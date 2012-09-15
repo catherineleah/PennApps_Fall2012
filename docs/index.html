@@ -54,9 +54,40 @@
 
     <div id="scroll" style="margin-top: 50px">
     </div>
-    <div id="map-canvas" style="position:absolute; bottom: 0px; left: 0px; display:none; z-index:1000"></div>
+    <div id="map-container" style="display:none;">
+      <div id="map-canvas" style="position:absolute; top: 0px; left: 0px; z-index:900">
+      </div>
+      <button onclick="redoSearch()" type="button" class="btn btn-inverse" style="position: absolute; top: 10px; right: 10px; z-index:1000">Redo Search Here</button>
+    </div> 
 
 <script type="text/javascript">
+
+  function redoSearch() {
+    ll = lat + "," + lng;
+    $.ajax({
+      async: false,
+      url: "https://api.foursquare.com/v2/venues/search?",
+      dataType: "json",
+      data: {
+        ll: ll,
+        categoryId: "4bf58dd8d48988d1cb941735",
+        client_id: "1RZ3PLTJPBAYOY4KEJDJIEUPM3CCJFRB22P3JYQZA3JCPE0Z",
+        client_secret: "FDCYFIMGAQGVHNVIZ5XSHLMQCYLSCKELUPEBSB3K5TYUTNRW",
+        radius: "400",
+        limit: "100",
+        v: "20120822"
+      },
+      success: function(data) {
+        displayMap(lat, lng);
+        $.each(data.response.venues, function(index, venues) {
+          console.log(venues.name);
+          foursquareToDisplay(venues);
+          setMarker(globalMap, venues.location.lat, venues.location.lng, venues.name);
+
+        });
+      }
+    });
+  }
 
 
   function prepareToGetFood() { 
@@ -137,15 +168,17 @@
 
   function hideBusinessList() {
     $('#scroll').css('display', 'none');
-    $('#map-canvas').css('display','inline');
+    $('#header').css('display', 'none');
+    $('#map-container').css('display','inline');
     var width = $(window).width();
     var height = $(window).height();
     $('#map-canvas').css('width', width).css('height', height);
   }
 
   function hideMap() {
-    $('#map-canvas').css('display','none');
+    $('#map-container').css('display','none');
     $('#scroll').css('display', 'inline');
+    $('#header').css('display', 'inline');
     $("html, body").animate({ scrollTop: $('#scroll').offset().top }, 10);
   }
 
