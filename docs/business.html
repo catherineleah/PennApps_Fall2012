@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>FoodTruckMeNow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Finding food trucks near you!">
+    <meta name="author" content="Joel Goldman">
+
+    <!-- Le styles -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="assets/css/docs.css" rel="stylesheet">
+    <link href="assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+    <link href="assets/css/jquery-ui.css" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script src="assets/js/jquery.js"></script>
+    <link rel="stylesheet" href="assets/css/font-awesome.css">
+
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+
+  </head>
+
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
+
+    <!-- Navbar
+    ================================================== -->
+  <div id="business">
+  </div>
+
+<script type="text/javascript">
+
+
+
+
+  function findBusiness(foursquareId) {
+    $.ajax({
+      async: false,
+      url: "https://api.foursquare.com/v2/venues/" + foursquareId,
+      dataType: "json",
+      data: {
+        client_id: "1RZ3PLTJPBAYOY4KEJDJIEUPM3CCJFRB22P3JYQZA3JCPE0Z",
+        client_secret: "FDCYFIMGAQGVHNVIZ5XSHLMQCYLSCKELUPEBSB3K5TYUTNRW",
+        v: "20120822"
+      },
+      success: function(data) {
+        displayBusiness(data.response.venue);
+      }
+    });
+  }
+
+
+  function displayBusiness(venue) {
+    var distanceMiles = Math.round(0.000621371 * venue.location.distance * 10) / 10;
+    var business =
+      "<div>" +
+         venue.name + 
+         venue.contact.phone +
+         venue.location.address +
+      "<div>";
+    $('#business').append(business);
+
+  }
+
+
+  $(function () {
+      var urlSearch = document.URL.search("[0-9]");
+      if (urlSearch != -1) {
+        foursquareId = document.URL.substring(urlSearch);
+        console.log(foursquareId);
+        findBusiness(foursquareId);
+      }
+  });
+
+
+
+</script>
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="assets/js/google-code-prettify/prettify.js"></script>
+    <script src="assets/js/bootstrap-transition.js"></script>
+    <script src="assets/js/bootstrap-alert.js"></script>
+    <script src="assets/js/bootstrap-modal.js"></script>
+    <script src="assets/js/bootstrap-dropdown.js"></script>
+    <script src="assets/js/bootstrap-scrollspy.js"></script>
+    <script src="assets/js/bootstrap-tab.js"></script>
+    <script src="assets/js/bootstrap-tooltip.js"></script>
+    <script src="assets/js/bootstrap-popover.js"></script>
+    <script src="assets/js/bootstrap-button.js"></script>
+    <script src="assets/js/bootstrap-collapse.js"></script>
+    <script src="assets/js/bootstrap-carousel.js"></script>
+    <script src="assets/js/bootstrap-typeahead.js"></script>
+    <script src="assets/js/bootstrap-affix.js"></script>
+    <script src="assets/js/application.js"></script>
+
+  </body>
+</html>
