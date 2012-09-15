@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="RcJJGWgmFY0X7sbwxSlFedsyFAAGdjeRLqQmL4CktwA" />
+    <title>FoodTruckMeNow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Finding food trucks near you!">
+    <meta name="author" content="Joel Goldman">
+
+    <!-- Le styles -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="assets/css/docs.css" rel="stylesheet">
+    <link href="assets/js/google-code-prettify/prettify.css" rel="stylesheet">
+    <link href="assets/css/jquery-ui.css" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script src="assets/js/jquery.js"></script>
+    <link rel="stylesheet" href="assets/css/font-awesome.css">
+
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="assets/ico/instamenu.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+
+  </head>
+
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
+
+    <!-- Navbar
+    ================================================== -->
+    <div id="header" class="jumbotron masthead">
+      <div class="container">
+        <h1>Food Truck Me Now!</h1>
+        <p>Finding awesome food trucks near you</p>
+        <a 
+          class="btn btn-primary btn-large" 
+          style="padding-top:10px; padding-bottom:10px; margin:10px"
+          onclick="prepareToGetFood()"
+          autocomplete="off">
+          I'm so hungry I could eat a horse!
+        </a>
+
+      </div>
+    </div>
+
+    <div id="scroll" style="margin: 0px">
+    </div>
+    <div id="map-canvas" style="position:absolute; bottom: 0px; left: 0px; display:none; z-index:1000"></div>
+
+<script type="text/javascript">
+
+
+  function prepareToGetFood() { 
+    $('#scroll').html("");
+    findFoodNearMe(39.953323, -75.201333);
+    /*
+    navigator.geolocation.getCurrentPosition(GetLocation);
+      function GetLocation(location) {
+        var lat = location.coords.latitude;
+        var lng = location.coords.longitude;
+        globalLat = lat;
+        globalLng = lng;
+        findFoodNearMe(lat, lng);
+      }
+  */
+  }
+
+
+
+  function findFoodNearMe(lat, lng) {
+    $("html, body").animate({ scrollTop: $('#scroll').offset().top }, 1800);
+    ll = lat + "," + lng;
+    $.ajax({
+      async: false,
+      url: "https://api.foursquare.com/v2/venues/search?",
+      dataType: "json",
+      data: {
+        ll: ll,
+        categoryId: "4bf58dd8d48988d1cb941735",
+        client_id: "1RZ3PLTJPBAYOY4KEJDJIEUPM3CCJFRB22P3JYQZA3JCPE0Z",
+        client_secret: "FDCYFIMGAQGVHNVIZ5XSHLMQCYLSCKELUPEBSB3K5TYUTNRW",
+        radius: "400",
+        limit: "30",
+        v: "20120822"
+      },
+      success: function(data) {
+        displayMap(lat, lng);
+        $.each(data.response.venues, function(index, venues) {
+          console.log(venues.name);
+          foursquareToDisplay(venues);
+          setMarker(globalMap, venues.location.lat, venues.location.lng, venues.name);
+
+        });
+      }
+    });
+  }
+
+  var globalVenues;
+
+  function foursquareToDisplay(venues) {
+    var distanceMiles = Math.round(0.000621371 * venues.location.distance * 10) / 10;
+    var link = document.URL.substring(0, document.URL.search("index")) + "business.html?" + venues.id;
+    console.log(link);
+    var business =
+      "<div class='well span12'>" + 
+          "<span style='margin:0px; float:right; font-size:10px; line-height:12px'><i class='icon-map-marker'></i> " + distanceMiles + " mi</span>" +
+          "<div>" +
+            "<a href='" + link + "'>" +
+              "<h5 style='white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 16px; margin-top: 0px; margin-bottom: 0px'>" + venues.name + "</h5>" +
+            "</a>" +
+          "</div>" +
+          "<span>" + venues.location.address + " " + venues.location.crossStreet + "<span>" + 
+        "<div>";
+    $('#scroll').append(business);
+
+  }
+
+
+  window.addEventListener("resize", function() {
+    if ($(window).height() < $(window).width()) {
+      hideBusinessList();
+    }
+    else {
+      hideMap();
+    }
+    
+  }, false);
+
+  function hideBusinessList() {
+    $('#scroll').css('display', 'none');
+    $('#map-canvas').css('width', '100%').css('height', '100%');
+    $('#map-canvas').css('display','inline');
+  }
+
+  function hideMap() {
+    $('#map-canvas').css('display','none');
+    $('#scroll').css('display', 'inline');
+    $("html, body").animate({ scrollTop: $('#scroll').offset().top }, 10);
+  }
+
+var globalMap;
+function displayMap(lat, lng) {
+
+  var name = document.getElementById("map-canvas").dataset.name;
+  var zoom;
+
+  zoom = 16;
+
+
+
+  var myOptions = {
+    zoom: zoom,
+    center: new google.maps.LatLng(lat,lng),
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    mapTypeControl: false,
+    zoomControlOptions: {
+        position: google.maps.ControlPosition.TOP_RIGHT
+    }
+  }
+  var map = new google.maps.Map(document.getElementById("map-canvas"),
+                                myOptions);
+  globalMap = map;
+
+  // setMarkers(map, businesses, name);
+}
+
+var infos = [];
+function setMarker(map, lat, lng, name) {
+  // Add markers to the map
+
+  // Marker sizes are expressed as a Size of X,Y
+  // where the origin of the image (0,0) is located
+  // in the top left of the image.
+
+  // Origins, anchor positions and coordinates of the marker
+  // increase in the X direction to the right and in
+  // the Y direction down.
+
+  var myLatLng = new google.maps.LatLng(lat, lng);
+
+  var contentString = 
+      '<div class="infoWindow">' +
+        '<h3>' + name + '</h3></div>';
+        // '<address>' + business[4];
+
+  var marker = new google.maps.Marker({
+      position: myLatLng,
+      map: map,
+      title: name,
+      content: contentString,
+      zIndex: 1,
+      clickable: true
+  });
+  google.maps.event.addListener(marker, 'click', function() {
+    /* close the previous info-window */
+    closeInfos();
+    /* the marker's content gets attached to the info-window: */
+    var info = new google.maps.InfoWindow({content: this.content });
+    /* trigger the infobox's open function */
+    info.open(map,this);
+    /* keep the handle, in order to close it on next click event */
+    infos[0]=info;
+  });
+}
+
+
+function closeInfos(){
+  if(infos.length > 0){
+    /* detach the info-window from the marker */
+    infos[0].set("marker",null);
+    /* and close it */
+    infos[0].close();
+    /* blank the array */
+    infos.length = 0;
+  }
+}
+
+
+
+</script>
+
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="assets/js/google-code-prettify/prettify.js"></script>
+    <script src="assets/js/bootstrap-transition.js"></script>
+    <script src="assets/js/bootstrap-alert.js"></script>
+    <script src="assets/js/bootstrap-modal.js"></script>
+    <script src="assets/js/bootstrap-dropdown.js"></script>
+    <script src="assets/js/bootstrap-scrollspy.js"></script>
+    <script src="assets/js/bootstrap-tab.js"></script>
+    <script src="assets/js/bootstrap-tooltip.js"></script>
+    <script src="assets/js/bootstrap-popover.js"></script>
+    <script src="assets/js/bootstrap-button.js"></script>
+    <script src="assets/js/bootstrap-collapse.js"></script>
+    <script src="assets/js/bootstrap-carousel.js"></script>
+    <script src="assets/js/bootstrap-typeahead.js"></script>
+    <script src="assets/js/bootstrap-affix.js"></script>
+    <script src="assets/js/application.js"></script>
+
+  </body>
+</html>
