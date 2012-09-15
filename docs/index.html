@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="google-site-verification" content="RcJJGWgmFY0X7sbwxSlFedsyFAAGdjeRLqQmL4CktwA" />
     <title>FoodTruckMeNow</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Finding food trucks near you!">
@@ -26,7 +25,6 @@
     <![endif]-->
 
     <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="assets/ico/instamenu.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
@@ -41,10 +39,10 @@
     <div id="header" class="jumbotron masthead">
       <div class="container">
         <h1>Food Truck Me Now!</h1>
-        <p><span style='font-size:50px;'>Finding awesome food trucks near you</span></p>
+        <p style='font-size:250%;'>Finding awesome food trucks near you</p>
         <a 
           class="btn btn-primary btn-large" 
-          style="padding-top:10px; padding-bottom:10px; margin:10px"
+          style="padding-top:15px; padding-bottom:15px; margin:15px; border-radius:15px;"
           onclick="prepareToGetFood()"
           autocomplete="off">
           I'm so hungry I could eat a horse!
@@ -53,7 +51,7 @@
       </div>
     </div>
 
-    <div id="scroll" style="margin: 0px">
+    <div id="scroll" style="margin-top: 50px">
     </div>
     <div id="map-canvas" style="position:absolute; bottom: 0px; left: 0px; display:none; z-index:1000"></div>
 
@@ -78,7 +76,7 @@
 
 
   function findFoodNearMe(lat, lng) {
-    $("html, body").animate({ scrollTop: $('#scroll').offset().top }, 1800);
+    $("html, body").animate({ scrollTop: $('#scroll').offset().top }, 800);
     ll = lat + "," + lng;
     $.ajax({
       async: false,
@@ -112,7 +110,7 @@
     var link = document.URL.substring(0, document.URL.search("index")) + "business.html?" + venues.id;
     console.log(link);
     var business =
-      "<div class='well span12'>" + 
+      "<div class='well span12' style='margin-left:0px;width:100%;'>" + 
           "<span style='margin:0px; float:right; font-size:10px; line-height:12px'><i class='icon-map-marker'></i> " + distanceMiles + " mi</span>" +
           "<div>" +
             "<a href='" + link + "'>" +
@@ -190,27 +188,40 @@ function setMarker(map, lat, lng, name) {
 
   var contentString = 
       '<div class="infoWindow">' +
-        '<h3>' + name + '</h3></div>';
-        // '<address>' + business[4];
+        '<h6>' + name + '</h6>' +
+      '</div>';
 
   var marker = new google.maps.Marker({
       position: myLatLng,
       map: map,
       title: name,
       content: contentString,
+
       zIndex: 1,
       clickable: true
   });
   google.maps.event.addListener(marker, 'click', function() {
     /* close the previous info-window */
     closeInfos();
+    var centerLatLng = new google.maps.LatLng(lat + 0.005, lng);
+    map.panTo(centerLatLng);
+
+
     /* the marker's content gets attached to the info-window: */
-    var info = new google.maps.InfoWindow({content: this.content });
+    var info = new google.maps.InfoWindow({content: this.content, maxWidth: 50, disableAutoPan: true, });
     /* trigger the infobox's open function */
     info.open(map,this);
+
+
+
+
     /* keep the handle, in order to close it on next click event */
     infos[0]=info;
   });
+}
+
+function centerOnPin(map, centerLatLng) {
+
 }
 
 
