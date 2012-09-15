@@ -65,10 +65,41 @@
 
     <div id="scroll" style="margin-top: 50px">
     </div>
-    <div id="map-canvas" style="position:absolute; bottom: 0px; left: 0px; display:none; z-index:1000"></div>
+    <div id="map-container" style="display:none;">
+      <div id="map-canvas" style="position:absolute; top: 0px; left: 0px; z-index:900">
+      </div>
+      <button onclick="redoSearch()" type="button" class="btn btn-inverse" style="position: absolute; top: 10px; right: 10px; z-index:1000">Redo Search Here</button>
+    </div> 
 
 
 <script type="text/javascript">
+
+  function redoSearch() {
+    ll = lat + "," + lng;
+    $.ajax({
+      async: false,
+      url: "https://api.foursquare.com/v2/venues/search?",
+      dataType: "json",
+      data: {
+        ll: ll,
+        categoryId: "4bf58dd8d48988d1cb941735",
+        client_id: "1RZ3PLTJPBAYOY4KEJDJIEUPM3CCJFRB22P3JYQZA3JCPE0Z",
+        client_secret: "FDCYFIMGAQGVHNVIZ5XSHLMQCYLSCKELUPEBSB3K5TYUTNRW",
+        radius: "400",
+        limit: "100",
+        v: "20120822"
+      },
+      success: function(data) {
+        displayMap(lat, lng);
+        $.each(data.response.venues, function(index, venues) {
+          console.log(venues.name);
+          foursquareToDisplay(venues);
+          setMarker(globalMap, venues.location.lat, venues.location.lng, venues.name);
+
+        });
+      }
+    });
+  }
 
 
   function prepareToGetFood() { 
@@ -149,15 +180,17 @@
 
   function hideBusinessList() {
     $('#scroll').css('display', 'none');
-    $('#map-canvas').css('display','inline');
+    $('#header').css('display', 'none');
+    $('#map-container').css('display','inline');
     var width = $(window).width();
     var height = $(window).height();
     $('#map-canvas').css('width', width).css('height', height);
   }
 
   function hideMap() {
-    $('#map-canvas').css('display','none');
+    $('#map-container').css('display','none');
     $('#scroll').css('display', 'inline');
+    $('#header').css('display', 'inline');
     $("html, body").animate({ scrollTop: $('#scroll').offset().top }, 10);
   }
 
@@ -252,134 +285,7 @@ function closeInfos(){
 }
 
 
-function addWaitTime(id, numPeople) {
-  var ws = new cloudmine.WebService({
-    appid: "c74de725f3954f6d9ba3f92489c58ac4",
-    apikey: "d15e4a05041741c88acb40e28d9ffc1e"
-  });
-  
-  var currentTime = new Date();
-  var uniqueTime = currentTime.getTime();
-  var day = currentTime.getDate();
-  if (day == 0 || day == 1 || day == 3 || day == 5){
-    var dayType = 'MWF';
-  }
-  else {
-    var dayType = 'TH';
-  }
-  var minutes = currentTime.getMinutes();
-  if (minutes < 15) {
-    var interval = 'q1';
-  } else if (minutes < 30) {
-    var interval = 'q2';
-  } else if (minutes < 45) {
-    var interval = 'q3';
-  } else {
-    var interval = 'q4';
-  }
-  
-  var dayObject = {};
-  var timeObject = {};
-  var intervalObject = {};
-  timeObject[uniqueTime] = numPeople;
-  intervalObject[interval] = timeObject;
-  dayObject[dayType] = intervalObject;
-  
-  ws.update(id, dayObject);
 
-}
-
-function addCategory(id, category) {
-  var ws = new cloudmine.WebService({
-    appid: "c74de725f3954f6d9ba3f92489c58ac4",
-    apikey: "d15e4a05041741c88acb40e28d9ffc1e"
-  });
-  
-  ws.get(id).on('success', function(data, response) {
-  	var dataObject = data[id];
-  	  
-  	//if (dataObject.categories){
-  		var categoryObject = dataObject.categories ? dataObject.categories : {};
-  		console.log(categoryObject);
-  		var count = categoryObject[category] ? categoryObject[category] : 0;
-  		count++;
-  		categoryObject[category] = count;
-  		dataObject['categories'] = categoryObject;
-  	
-  		ws.update(id, dataObject);
-  	
-  });
-  
-  ws.get(id).on('error', function(data, response) {
-  	var dataObject = {};
-  	var categoryObject = {};
-  	categoryObject[category] = 1;
-  	dataObject['categories'] = categoryObject;
-  	
-  	ws.update(id, dataObject);
-  });
-}
-
-function getCategory(id) {
-	var ws = new cloudmine.WebService({
-    	appid: "c74de725f3954f6d9ba3f92489c58ac4",
-    	apikey: "d15e4a05041741c88acb40e28d9ffc1e"
-  	});
-
-	ws.get(id).on('success', function(data, response) {
-		var categories = data[id].categories;
-		if (categories == null)
-		return -1;
-		
-		var maxCount = 0;
-		var max;
-		for (x in categories) {
-			if (categories[x] >= maxCount){
-				max = x;
-				maxCount = categories[x];
-			}
-		}
-		console.log(max);
-	});
-}
-
-function getWaitTime(id){
-	var ws = new cloudmine.WebService({
-    	appid: "c74de725f3954f6d9ba3f92489c58ac4",
-    	apikey: "d15e4a05041741c88acb40e28d9ffc1e"
-  	});
-  	
-  	ws.get(id).on('success', function(data, response) {
-  		var currentTime = new Date();
-  		var day = currentTime.getDate();
-  		if (day == 0 || day == 1 || day == 3 || day == 5){
-  			var dayType = 'MWF';
-  		}
-  		else {
-  			var dayType = 'TH';
-  		}
-  		var minutes = currentTime.getMinutes();
-  		if (minutes < 15) {
-  			var interval = 'q1';
-  		} else if (minutes < 30) {
-  			var interval = 'q2';
-  		} else if (minutes < 45) {
-  			var interval = 'q3';
-  		} else {
-  			var interval = 'q4';
-  		}
-  		
-  		var lineCounts = data[id][dayType][interval];
-  		var total = 0;
-  		var count = 0;
-  		for (x in lineCounts) {
-  			total += lineCounts[x];
-  			count ++;
-  		}
-  		console.log(total/count);
-  		return total/count;
-  		
-  	});
 }
 
 
