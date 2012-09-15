@@ -15,6 +15,7 @@
     <link href="assets/css/jquery-ui.css" rel="stylesheet">
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/geolocation.js"></script>
     <script src="assets/js/cloudmine.js"></script>
     <link rel="stylesheet" href="assets/css/font-awesome.css">
 
@@ -62,7 +63,7 @@
   function prepareToGetFood() { 
     $('#scroll').html("");
     findFoodNearMe(39.953323, -75.201333);
-    /*
+/*
     navigator.geolocation.getCurrentPosition(GetLocation);
       function GetLocation(location) {
         var lat = location.coords.latitude;
@@ -71,7 +72,7 @@
         globalLng = lng;
         findFoodNearMe(lat, lng);
       }
-  */
+*/
   }
 
 
@@ -137,8 +138,10 @@
 
   function hideBusinessList() {
     $('#scroll').css('display', 'none');
-    $('#map-canvas').css('width', '100%').css('height', '100%');
     $('#map-canvas').css('display','inline');
+    var width = $(window).width();
+    var height = $(window).height();
+    $('#map-canvas').css('width', width).css('height', height);
   }
 
   function hideMap() {
@@ -148,6 +151,7 @@
   }
 
 var globalMap;
+var globalCenter;
 function displayMap(lat, lng) {
 
   var name = document.getElementById("map-canvas").dataset.name;
@@ -168,9 +172,13 @@ function displayMap(lat, lng) {
   }
   var map = new google.maps.Map(document.getElementById("map-canvas"),
                                 myOptions);
-  globalMap = map;
 
-  // setMarkers(map, businesses, name);
+  var GeoMarker = new GeolocationMarker(map);
+  var center = new google.maps.LatLng(lat,lng);
+  console.log(lat + ", " + lng);
+  globalMap = map;
+  globalCenter = center;
+
 }
 
 var infos = [];
@@ -197,32 +205,27 @@ function setMarker(map, lat, lng, name) {
       map: map,
       title: name,
       content: contentString,
-
       zIndex: 1,
-      clickable: true
   });
   google.maps.event.addListener(marker, 'click', function() {
     /* close the previous info-window */
     closeInfos();
-    var centerLatLng = new google.maps.LatLng(lat + 0.005, lng);
+    var centerLatLng = new google.maps.LatLng(lat + 0.0016, lng);
     map.panTo(centerLatLng);
 
 
     /* the marker's content gets attached to the info-window: */
-    var info = new google.maps.InfoWindow({content: this.content, maxWidth: 50, disableAutoPan: true, });
+    var info = new google.maps.InfoWindow({
+      content: this.content, 
+      maxWidth: 50, 
+      disableAutoPan: true, 
+    });
     /* trigger the infobox's open function */
     info.open(map,this);
-
-
-
 
     /* keep the handle, in order to close it on next click event */
     infos[0]=info;
   });
-}
-
-function centerOnPin(map, centerLatLng) {
-
 }
 
 
@@ -236,6 +239,7 @@ function closeInfos(){
     infos.length = 0;
   }
 }
+
 
 function addWaitTime(id, numPeople) {
   var ws = new cloudmine.WebService({
@@ -272,6 +276,99 @@ function addWaitTime(id, numPeople) {
   
   ws.update(id, dayObject);
 
+}
+
+function addCategory(id, category) {
+  var ws = new cloudmine.WebService({
+    appid: "c74de725f3954f6d9ba3f92489c58ac4",
+    apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+  });
+  
+  ws.get(id).on('success', function(data, response) {
+  	var dataObject = data[id];
+  	  
+  	//if (dataObject.categories){
+  		var categoryObject = dataObject.categories ? dataObject.categories : {};
+  		console.log(categoryObject);
+  		var count = categoryObject[category] ? categoryObject[category] : 0;
+  		count++;
+  		categoryObject[category] = count;
+  		dataObject['categories'] = categoryObject;
+  	
+  		ws.update(id, dataObject);
+  	
+  });
+  
+  ws.get(id).on('error', function(data, response) {
+  	var dataObject = {};
+  	var categoryObject = {};
+  	categoryObject[category] = 1;
+  	dataObject['categories'] = categoryObject;
+  	
+  	ws.update(id, dataObject);
+  });
+}
+
+function getCategory(id) {
+	var ws = new cloudmine.WebService({
+    	appid: "c74de725f3954f6d9ba3f92489c58ac4",
+    	apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+  	});
+
+	ws.get(id).on('success', function(data, response) {
+		var categories = data[id].categories;
+		if (categories == null)
+		return -1;
+		
+		var maxCount = 0;
+		var max;
+		for (x in categories) {
+			if (categories[x] >= maxCount){
+				max = x;
+				maxCount = categories[x];
+			}
+		}
+		console.log(max);
+	});
+}
+
+function getWaitTime(id){
+	var ws = new cloudmine.WebService({
+    	appid: "c74de725f3954f6d9ba3f92489c58ac4",
+    	apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+  	});
+  	
+  	ws.get(id).on('success', function(data, response) {
+  		var currentTime = new Date();
+  		var day = currentTime.getDate();
+  		if (day == 0 || day == 1 || day == 3 || day == 5){
+  			var dayType = 'MWF';
+  		}
+  		else {
+  			var dayType = 'TH';
+  		}
+  		var minutes = currentTime.getMinutes();
+  		if (minutes < 15) {
+  			var interval = 'q1';
+  		} else if (minutes < 30) {
+  			var interval = 'q2';
+  		} else if (minutes < 45) {
+  			var interval = 'q3';
+  		} else {
+  			var interval = 'q4';
+  		}
+  		
+  		var lineCounts = data[id][dayType][interval];
+  		var total = 0;
+  		var count = 0;
+  		for (x in lineCounts) {
+  			total += lineCounts[x];
+  			count ++;
+  		}
+  		console.log(total/count);
+  		return total/count;
+  		
+  	});
 }
 
 
