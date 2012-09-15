@@ -103,26 +103,30 @@
         "<div style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
         "<h3 style='text-shadow:-1px 1px 0px #9e9;'>" + venue.name + "</h3>" +
       "</div>";
-      if (getCategory(venue.id) != -1) {
-        business += 
-        "<div class='bizsection bizline'>" +
-          "<span>" + getCategory(venue.id) + "<a href='notRightCategory()'>Not the right category?</a></span>" +
-        "</div>";
-      }
-      else {
-        business +=
+      
+    getCategory(venue.id, function(category) {
+    	if (category == -1){ //No category found
+    	alert('blah');
+    		business +=
         "<div class='bizsection bizline'>" +
           "<span><a href='notRightCategory()'>What kind of place is this?</a></span>" +
         "</div>";
-      }
-      business +=
+    	} else {
+    		business += 
+        "<div class='bizsection bizline'>" +
+          "<span>" + getCategory(venue.id) + "<a href='notRightCategory()'>Not the right category?</a></span>" +
+        "</div>";
+    	}
+    	
+    	business +=
       "<div class='bizsection bizline'>" +
         "<address>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
       "</div>";
+      
     $('#business').append(business);
-
+    });
   }
-
+    
 
   $(function () {
       var urlSearch = document.URL.search("\\?")+1;
@@ -202,16 +206,17 @@ function addCategory(id, category) {
   });
 }
 
-function getCategory(id) {
+function getCategory(id, callback) {
   var ws = new cloudmine.WebService({
       appid: "c74de725f3954f6d9ba3f92489c58ac4",
       apikey: "d15e4a05041741c88acb40e28d9ffc1e"
     });
 
   ws.get(id).on('success', function(data, response) {
+  	alert('success');
     var categories = data[id].categories;
-    if (categories == null)
-    return -1;
+    if (!categories)
+    	callback(-1);
     
     var maxCount = 0;
     var max;
@@ -221,11 +226,14 @@ function getCategory(id) {
         maxCount = categories[x];
       }
     }
-    console.log(max);
+    callback(max);
+
+  }).on('error', function(data, response) {
+  	callback(-1);
   });
 }
 
-function getWaitTime(id){
+function getWaitTime(id, callback){
   var ws = new cloudmine.WebService({
       appid: "c74de725f3954f6d9ba3f92489c58ac4",
       apikey: "d15e4a05041741c88acb40e28d9ffc1e"
@@ -258,8 +266,7 @@ function getWaitTime(id){
         total += lineCounts[x];
         count ++;
       }
-      console.log(total/count);
-      return total/count;
+      callback(total/count);
       
     });
 }
