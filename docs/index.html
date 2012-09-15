@@ -32,14 +32,15 @@
     <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
 
     <style type='text/css'>
-      .loc:hover{
+      .loc:focus{
         background-color:#88DD77;
       }
-
-      a .loc:hover span{
-        text-transform:none;
+      a:hover {
         text-decoration:none;
+        text-transform:none;
+        color:#333;
       }
+
     </style>
 
   </head>
@@ -156,11 +157,11 @@
     var business =
       "<a href='" + link + "'>" + 
         "<div class='well span12 loc' style='width:100%;margin:0px;'>" + 
-          "<div style='margin-right:20px; float:right; font-size:10px; line-height:12px'><i class='icon-map-marker'></i> " + distanceMiles + " mi</div>" +
+          "<div style='margin-right:20px; float:right; font-size:10px; line-height:12px;text-decoration:none;'><i class='icon-map-marker'></i> " + distanceMiles + " mi</div>" +
           "<div style='margin-left:20px;'>" + 
-            "<span style='font-weight:bold;color:#333;'>" + venues.name + "</span>" +
+            "<div style='font-weight:bold;color:#333;text-decoration:none;'>" + venues.name + "</div>" +
           "</div>" +
-          "<div style='color:#666;margin-left:20px;'>" + venues.location.address + " " + venues.location.crossStreet + "</div>" + 
+          "<div style='color:#666;margin-left:20px;text-decoration:none;'>" + venues.location.address + " " + venues.location.crossStreet + "</div>" + 
         "</div>" +
       "</a>";
     $('#scroll').append(business);
@@ -282,10 +283,6 @@ function closeInfos(){
     /* blank the array */
     infos.length = 0;
   }
-}
-
-
-
 }
 
 
