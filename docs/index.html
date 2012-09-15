@@ -304,6 +304,29 @@ function addCategory(id, category) {
   });
 }
 
+function getCategory(id) {
+	var ws = new cloudmine.WebService({
+    	appid: "c74de725f3954f6d9ba3f92489c58ac4",
+    	apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+  	});
+
+	ws.get(id).on('success', function(data, response) {
+		var categories = data[id].categories;
+		if (categories == null)
+		return -1;
+		
+		var maxCount = 0;
+		var max;
+		for (x in categories) {
+			if (categories[x] >= maxCount){
+				max = x;
+				maxCount = categories[x];
+			}
+		}
+		console.log(max);
+	});
+}
+
 
 </script>
 
