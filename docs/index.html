@@ -273,6 +273,36 @@ function addWaitTime(id, numPeople) {
 
 }
 
+function addCategory(id, category) {
+  var ws = new cloudmine.WebService({
+    appid: "c74de725f3954f6d9ba3f92489c58ac4",
+    apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+  });
+  
+  ws.get(id).on('success', function(data, response) {
+  	var dataObject = data[id];
+  	  
+  	//if (dataObject.categories){
+  		var categoryObject = dataObject.categories ? dataObject.categories : {};
+  		console.log(categoryObject);
+  		var count = categoryObject[category] ? categoryObject[category] : 0;
+  		count++;
+  		categoryObject[category] = count;
+  		dataObject['categories'] = categoryObject;
+  	
+  		ws.update(id, dataObject);
+  	
+  });
+  
+  ws.get(id).on('error', function(data, response) {
+  	var dataObject = {};
+  	var categoryObject = {};
+  	categoryObject[category] = 1;
+  	dataObject['categories'] = categoryObject;
+  	
+  	ws.update(id, dataObject);
+  });
+}
 
 
 </script>
