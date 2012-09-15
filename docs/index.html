@@ -240,6 +240,75 @@ function closeInfos(){
 }
 
 
+function addWaitTime(id, numPeople) {
+  var ws = new cloudmine.WebService({
+    appid: "c74de725f3954f6d9ba3f92489c58ac4",
+    apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+  });
+  
+  var currentTime = new Date();
+  var uniqueTime = currentTime.getTime();
+  var day = currentTime.getDate();
+  if (day == 0 || day == 1 || day == 3 || day == 5){
+  	var dayType = 'MWF';
+  }
+  else {
+  	var dayType = 'TH';
+  }
+  var minutes = currentTime.getMinutes();
+  if (minutes < 15) {
+  	var interval = 'q1';
+  } else if (minutes < 30) {
+  	var interval = 'q2';
+  } else if (minutes < 45) {
+  	var interval = 'q3';
+  } else {
+  	var interval = 'q4';
+  }
+  
+  var dayObject = {};
+  var timeObject = {};
+  var intervalObject = {};
+  timeObject[uniqueTime] = numPeople;
+  intervalObject[interval] = timeObject;
+  dayObject[dayType] = intervalObject;
+  
+  ws.update(id, dayObject);
+
+}
+
+function addCategory(id, category) {
+  var ws = new cloudmine.WebService({
+    appid: "c74de725f3954f6d9ba3f92489c58ac4",
+    apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+  });
+  
+  ws.get(id).on('success', function(data, response) {
+  	var dataObject = data[id];
+  	  
+  	//if (dataObject.categories){
+  		var categoryObject = dataObject.categories ? dataObject.categories : {};
+  		console.log(categoryObject);
+  		var count = categoryObject[category] ? categoryObject[category] : 0;
+  		count++;
+  		categoryObject[category] = count;
+  		dataObject['categories'] = categoryObject;
+  	
+  		ws.update(id, dataObject);
+  	
+  });
+  
+  ws.get(id).on('error', function(data, response) {
+  	var dataObject = {};
+  	var categoryObject = {};
+  	categoryObject[category] = 1;
+  	dataObject['categories'] = categoryObject;
+  	
+  	ws.update(id, dataObject);
+  });
+}
+
+
 
 </script>
 
