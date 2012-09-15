@@ -1040,3 +1040,11 @@ form.bs-docs-example {
 #map-canvas img {
   max-width: none;
 }
+
+#map_infowindow.simpleInfoWindow {
+    border: 2px solid #455268;
+    background-color: #dfe5d7; 
+    background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%); 
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfff4), color-stop(40%,#dfe5d7), color-stop(100%,#b3bead)); 
+}
+
