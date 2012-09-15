@@ -41,14 +41,30 @@
 <script type="text/javascript">
 
 
+  function prepareToGetFood(foursquareId) { 
+    findBusiness(foursquareId, 39.953323, -75.201333);
+    /*
+    navigator.geolocation.getCurrentPosition(GetLocation);
+      function GetLocation(location) {
+        var lat = location.coords.latitude;
+        var lng = location.coords.longitude;
+        globalLat = lat;
+        globalLng = lng;
+        findFoodNearMe(lat, lng);
+      }
+  */
+  }
 
 
-  function findBusiness(foursquareId) {
+
+  function findBusiness(foursquareId, lat, lng) {
+    ll = lat + "," + lng;
     $.ajax({
       async: false,
       url: "https://api.foursquare.com/v2/venues/" + foursquareId,
       dataType: "json",
       data: {
+        ll: ll,
         client_id: "1RZ3PLTJPBAYOY4KEJDJIEUPM3CCJFRB22P3JYQZA3JCPE0Z",
         client_secret: "FDCYFIMGAQGVHNVIZ5XSHLMQCYLSCKELUPEBSB3K5TYUTNRW",
         v: "20120822"
@@ -61,12 +77,12 @@
 
 
   function displayBusiness(venue) {
-    var distanceMiles = Math.round(0.000621371 * venue.location.distance * 10) / 10;
+    var distanceMiles = Math.round(0.000621371 * venue.location.distance * 100) / 100;
     var business =
-      "<div>" +
-         venue.name + 
-         venue.contact.phone +
-         venue.location.address +
+      "<div style='margin: 5px'>" +
+        "<span style='float:right'>" + distanceMiles + " mi.</span>" + 
+        "<h3>" + venue.name + "</h3>" +
+        "<address>" + venue.location.address + " " + venue.location.crossStreet + "</addres>" +
       "<div>";
     $('#business').append(business);
 
@@ -78,7 +94,7 @@
       if (urlSearch != -1) {
         foursquareId = document.URL.substring(urlSearch);
         console.log(foursquareId);
-        findBusiness(foursquareId);
+        prepareToGetFood(foursquareId);
       }
   });
 
