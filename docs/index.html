@@ -88,7 +88,7 @@
         client_id: "1RZ3PLTJPBAYOY4KEJDJIEUPM3CCJFRB22P3JYQZA3JCPE0Z",
         client_secret: "FDCYFIMGAQGVHNVIZ5XSHLMQCYLSCKELUPEBSB3K5TYUTNRW",
         radius: "400",
-        limit: "30",
+        limit: "100",
         v: "20120822"
       },
       success: function(data) {
@@ -106,7 +106,7 @@
   var globalVenues;
 
   function foursquareToDisplay(venues) {
-    var distanceMiles = Math.round(0.000621371 * venues.location.distance * 10) / 10;
+    var distanceMiles = Math.round(0.000621371 * venues.location.distance * 100) / 100;
     var link = document.URL.substring(0, document.URL.search("index")) + "business.html?" + venues.id;
     console.log(link);
     var business =
