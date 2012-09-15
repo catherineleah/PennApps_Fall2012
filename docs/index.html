@@ -31,6 +31,18 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
 
+    <style type='text/css'>
+      .loc:focus{
+        background-color:#88DD77;
+      }
+      a:hover {
+        text-decoration:none;
+        text-transform:none;
+        color:#333;
+      }
+
+    </style>
+
   </head>
 
   <body data-spy="scroll" data-target=".bs-docs-sidebar" style='padding:0px; margin:0px;'>
@@ -150,12 +162,12 @@
     console.log(link);
     var business =
       "<a href='" + link + "'>" + 
-        "<div class='well span12' style='width:100%;margin:0px;'>" + 
-          "<div style='margin-right:0px; float:right; font-size:10px; line-height:12px'><i class='icon-map-marker'></i> " + distanceMiles + " mi</div>" +
-          "<div>" + 
-            "<span style='font-weight:bold;color:#333;'>" + venues.name + "</span>" +
+        "<div class='well span12 loc' style='width:100%;margin:0px;'>" + 
+          "<div style='margin-right:20px; float:right; font-size:10px; line-height:12px;text-decoration:none;'><i class='icon-map-marker'></i> " + distanceMiles + " mi</div>" +
+          "<div style='margin-left:20px;'>" + 
+            "<div style='font-weight:bold;color:#333;text-decoration:none;'>" + venues.name + "</div>" +
           "</div>" +
-          "<span>" + venues.location.address + " " + venues.location.crossStreet + "</span>" + 
+          "<div style='color:#666;margin-left:20px;text-decoration:none;'>" + venues.location.address + " " + venues.location.crossStreet + "</div>" + 
         "</div>" +
       "</a>";
     $('#scroll').append(business);
@@ -278,8 +290,6 @@ function closeInfos(){
     infos.length = 0;
   }
 }
-
-
 
 
 </script>

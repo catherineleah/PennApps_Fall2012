@@ -2829,7 +2829,7 @@ table .span24 {
 .well {
   width:100%;
   min-height: 20px;
-  padding: 15px 15px;
+  padding: 15px 0px 15px 0px;
   margin-bottom: 0px;
   background-color: #f8f8f8;
   border: 1px 0 0 0 solid #ddd;

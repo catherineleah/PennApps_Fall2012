@@ -42,7 +42,7 @@
 <style type='text/css'>
   .bizheader{
     margin:0px;
-    padding:10px 18px 5px 18px; 
+    padding:13px 18px 5px 18px; 
     background-color:#88DD77;
     border-bottom:1px solid #DDD;
   }
@@ -103,26 +103,47 @@
         "<div style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
         "<h3 style='text-shadow:-1px 1px 0px #9e9;'>" + venue.name + "</h3>" +
       "</div>";
-      if (getCategory(venue.id) != -1) {
-        business += 
-        "<div class='bizsection bizline'>" +
-          "<span>" + getCategory(venue.id) + "<a href='notRightCategory()'>Not the right category?</a></span>" +
-        "</div>";
-      }
-      else {
-        business +=
+      
+    getCategory(venue.id, function(category) {
+    	if (category == -1){ //No category found
+    		business +=
         "<div class='bizsection bizline'>" +
           "<span><a href='notRightCategory()'>What kind of place is this?</a></span>" +
         "</div>";
-      }
-      business +=
+    	} else {
+    		business += 
+        "<div class='bizsection bizline'>" +
+          "<span>" + category + "<a href='notRightCategory()'>Not the right category?</a></span>" +
+        "</div>";
+    	}
+    	
+    	business +=
       "<div class='bizsection bizline'>" +
         "<address>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
       "</div>";
-    $('#business').append(business);
-
+      
+    
+    	getWaitTime(venue.id, function(waitTime) {
+    		if (waitTime == -1) {
+    			business +=
+    			"<div class='bizsection bizline'>" 
+    			+ "<p> Estimated Line Length: Currently unavailable.  Feed us some data! </p>" +
+    			"</div>";
+    		}
+    		else {
+    			business +=
+    			"<div class='bizsection bizline'>" 
+    			+ "<p> Estimated line length: " + waitTime +"</p>" +
+    			"</div>";
+    		}
+    		
+    		 $('#business').append(business);
+    	
+    	});
+    
+    });
   }
-
+    
 
   $(function () {
       var urlSearch = document.URL.search("\\?")+1;
@@ -202,16 +223,17 @@ function addCategory(id, category) {
   });
 }
 
-function getCategory(id) {
+function getCategory(id, callback) {
   var ws = new cloudmine.WebService({
       appid: "c74de725f3954f6d9ba3f92489c58ac4",
       apikey: "d15e4a05041741c88acb40e28d9ffc1e"
     });
 
   ws.get(id).on('success', function(data, response) {
+  	alert('success');
     var categories = data[id].categories;
-    if (categories == null)
-    return -1;
+    if (!categories)
+    	callback(-1);
     
     var maxCount = 0;
     var max;
@@ -221,11 +243,14 @@ function getCategory(id) {
         maxCount = categories[x];
       }
     }
-    console.log(max);
+    callback(max);
+
+  }).on('error', function(data, response) {
+  	callback(-1);
   });
 }
 
-function getWaitTime(id){
+function getWaitTime(id, callback){
   var ws = new cloudmine.WebService({
       appid: "c74de725f3954f6d9ba3f92489c58ac4",
       apikey: "d15e4a05041741c88acb40e28d9ffc1e"
@@ -252,15 +277,18 @@ function getWaitTime(id){
       }
       
       var lineCounts = data[id][dayType][interval];
+      if (!lineCounts)
+      	callback(-1);
       var total = 0;
       var count = 0;
       for (x in lineCounts) {
         total += lineCounts[x];
         count ++;
       }
-      console.log(total/count);
-      return total/count;
+      callback(total/count);
       
+    }).on('error', function(data, response) {
+    	callback(-1);
     });
 }
 
