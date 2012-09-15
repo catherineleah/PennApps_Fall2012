@@ -15,6 +15,7 @@
     <link href="assets/css/jquery-ui.css" rel="stylesheet">
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/cloudmine.js"></script>
     <link rel="stylesheet" href="assets/css/font-awesome.css">
 
 
@@ -101,7 +102,20 @@
       "<div class='bizheader'>" +
         "<div style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
         "<h3 style='text-shadow:-1px 1px 0px #9e9;'>" + venue.name + "</h3>" +
-      "</div>" +
+      "</div>";
+      if (getCategory(venue.id) != -1) {
+        business += 
+        "<div class='bizsection bizline'>" +
+          "<span>" + getCategory(venue.id) + "<a href='notRightCategory()'>Not the right category?</a></span>" +
+        "</div>";
+      }
+      else {
+        business +=
+        "<div class='bizsection bizline'>" +
+          "<span><a href='notRightCategory()'>What kind of place is this?</a></span>" +
+        "</div>";
+      }
+      business +=
       "<div class='bizsection bizline'>" +
         "<address>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
       "</div>";
@@ -118,6 +132,137 @@
         prepareToGetFood(foursquareId);
       }
   });
+
+
+  function addWaitTime(id, numPeople) {
+  var ws = new cloudmine.WebService({
+    appid: "c74de725f3954f6d9ba3f92489c58ac4",
+    apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+  });
+  
+  var currentTime = new Date();
+  var uniqueTime = currentTime.getTime();
+  var day = currentTime.getDate();
+  if (day == 0 || day == 1 || day == 3 || day == 5){
+    var dayType = 'MWF';
+  }
+  else {
+    var dayType = 'TH';
+  }
+  var minutes = currentTime.getMinutes();
+  if (minutes < 15) {
+    var interval = 'q1';
+  } else if (minutes < 30) {
+    var interval = 'q2';
+  } else if (minutes < 45) {
+    var interval = 'q3';
+  } else {
+    var interval = 'q4';
+  }
+  
+  var dayObject = {};
+  var timeObject = {};
+  var intervalObject = {};
+  timeObject[uniqueTime] = numPeople;
+  intervalObject[interval] = timeObject;
+  dayObject[dayType] = intervalObject;
+  
+  ws.update(id, dayObject);
+
+}
+
+function addCategory(id, category) {
+  var ws = new cloudmine.WebService({
+    appid: "c74de725f3954f6d9ba3f92489c58ac4",
+    apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+  });
+  
+  ws.get(id).on('success', function(data, response) {
+    var dataObject = data[id];
+      
+    //if (dataObject.categories){
+      var categoryObject = dataObject.categories ? dataObject.categories : {};
+      console.log(categoryObject);
+      var count = categoryObject[category] ? categoryObject[category] : 0;
+      count++;
+      categoryObject[category] = count;
+      dataObject['categories'] = categoryObject;
+    
+      ws.update(id, dataObject);
+    
+  });
+  
+  ws.get(id).on('error', function(data, response) {
+    var dataObject = {};
+    var categoryObject = {};
+    categoryObject[category] = 1;
+    dataObject['categories'] = categoryObject;
+    
+    ws.update(id, dataObject);
+  });
+}
+
+function getCategory(id) {
+  var ws = new cloudmine.WebService({
+      appid: "c74de725f3954f6d9ba3f92489c58ac4",
+      apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+    });
+
+  ws.get(id).on('success', function(data, response) {
+    var categories = data[id].categories;
+    if (categories == null)
+    return -1;
+    
+    var maxCount = 0;
+    var max;
+    for (x in categories) {
+      if (categories[x] >= maxCount){
+        max = x;
+        maxCount = categories[x];
+      }
+    }
+    console.log(max);
+  });
+}
+
+function getWaitTime(id){
+  var ws = new cloudmine.WebService({
+      appid: "c74de725f3954f6d9ba3f92489c58ac4",
+      apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+    });
+    
+    ws.get(id).on('success', function(data, response) {
+      var currentTime = new Date();
+      var day = currentTime.getDate();
+      if (day == 0 || day == 1 || day == 3 || day == 5){
+        var dayType = 'MWF';
+      }
+      else {
+        var dayType = 'TH';
+      }
+      var minutes = currentTime.getMinutes();
+      if (minutes < 15) {
+        var interval = 'q1';
+      } else if (minutes < 30) {
+        var interval = 'q2';
+      } else if (minutes < 45) {
+        var interval = 'q3';
+      } else {
+        var interval = 'q4';
+      }
+      
+      var lineCounts = data[id][dayType][interval];
+      var total = 0;
+      var count = 0;
+      for (x in lineCounts) {
+        total += lineCounts[x];
+        count ++;
+      }
+      console.log(total/count);
+      return total/count;
+      
+    });
+}
 
 
 
