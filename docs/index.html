@@ -16,7 +16,7 @@
     <link href="assets/css/jquery-ui.css" rel="stylesheet">
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script src="assets/js/jquery.js"></script>
-    <script src="js/cloudmine.0.9.js"></script>
+    <script src="assets/js/cloudmine.js"></script>
     <link rel="stylesheet" href="assets/css/font-awesome.css">
 
 
@@ -223,6 +223,43 @@ function closeInfos(){
     /* blank the array */
     infos.length = 0;
   }
+}
+
+function addWaitTime(id, numPeople) {
+  var ws = new cloudmine.WebService({
+    appid: "c74de725f3954f6d9ba3f92489c58ac4",
+    apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+  });
+  
+  var currentTime = new Date();
+  var uniqueTime = currentTime.getTime();
+  var day = currentTime.getDate();
+  if (day == 0 || day == 1 || day == 3 || day == 5){
+  	var dayType = 'MWF';
+  }
+  else {
+  	var dayType = 'TH';
+  }
+  var minutes = currentTime.getMinutes();
+  if (minutes < 15) {
+  	var interval = 'q1';
+  } else if (minutes < 30) {
+  	var interval = 'q2';
+  } else if (minutes < 45) {
+  	var interval = 'q3';
+  } else {
+  	var interval = 'q4';
+  }
+  
+  var dayObject = {};
+  var timeObject = {};
+  var intervalObject = {};
+  timeObject[uniqueTime] = numPeople;
+  intervalObject[interval] = timeObject;
+  dayObject[dayType] = intervalObject;
+  
+  ws.update(id, dayObject);
+
 }
 
 
