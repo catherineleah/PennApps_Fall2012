@@ -210,7 +210,7 @@ hr.soften {
   line-height: 1;
   letter-spacing: -3px;
   text-transform:uppercase;
-  font-weight:bolder;
+  font-weight:normal;
 }
 .masthead p {
   color:#D8D8D8;
@@ -913,10 +913,10 @@ form.bs-docs-example {
 
   /* Widen masthead and social buttons to fill body padding */
   .jumbotron {
-    padding: 40px 20px;
+    padding: 40px 0px;
     margin-top:   -20px; /* Offset bottom margin on .navbar */
-    margin-right: -20px;
-    margin-left:  -20px;
+    margin-right: 0px;
+    margin-left:  0px;
   }
   .masthead h1 {
     font-size: 90px;
@@ -982,7 +982,7 @@ form.bs-docs-example {
     font-size: 20px;
   }
   .jumbotron .btn {
-    display: block;
+    display:block;
     margin: 0 auto;
   }
 
