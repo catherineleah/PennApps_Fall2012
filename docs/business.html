@@ -113,7 +113,7 @@
     	} else {
     		business += 
         "<div class='bizsection bizline'>" +
-          "<span>" + getCategory(venue.id) + "<a href='notRightCategory()'>Not the right category?</a></span>" +
+          "<span>" + category + "<a href='notRightCategory()'>Not the right category?</a></span>" +
         "</div>";
     	}
     	
@@ -122,7 +122,25 @@
         "<address>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
       "</div>";
       
-    $('#business').append(business);
+    
+    	getWaitTime(venue.id, function(waitTime) {
+    		if (waitTime == -1) {
+    			business +=
+    			"<div class='bizsection bizline'>" 
+    			+ "<p> Estimated Line Length: Currently unavailable.  Feed us some data! </p>" +
+    			"</div>";
+    		}
+    		else {
+    			business +=
+    			"<div class='bizsection bizline'>" 
+    			+ "<p> Estimated line length: " + waitTime +"</p>" +
+    			"</div>";
+    		}
+    		
+    		 $('#business').append(business);
+    	
+    	});
+    
     });
   }
     
@@ -259,6 +277,8 @@ function getWaitTime(id, callback){
       }
       
       var lineCounts = data[id][dayType][interval];
+      if (!lineCounts)
+      	callback(-1);
       var total = 0;
       var count = 0;
       for (x in lineCounts) {
@@ -267,6 +287,8 @@ function getWaitTime(id, callback){
       }
       callback(total/count);
       
+    }).on('error', function(data, response) {
+    	callback(-1);
     });
 }
 
