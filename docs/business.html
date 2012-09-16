@@ -38,10 +38,12 @@
     ================================================== -->
   <div id="business" style='width:100%;margin-top:0px;'>
   </div>
+
   <div id="menu-layout" style="display:none;">
       <div id="menu" style="display:none;">
       </div>
   </div> 
+
 
 <style type='text/css'>
   .bizheader{
@@ -60,6 +62,7 @@
   .bizline{
     border-bottom:1px solid #DDD;
   }
+
   .bizsection a:hover{
       text-decoration:none;
   }
@@ -147,6 +150,7 @@
     margin-top:-5px;
     font-size:12px;
   }
+
 </style>
 
 <script type="text/javascript">
@@ -186,6 +190,7 @@
       }
     });
   }
+
 
   function generateMenuSection(title){
     return "<div class='menuSectionHeader'><div class='menuSectionTitle'>" + title + "</div></div>";
@@ -545,31 +550,32 @@
     var business =
       "<div class='bizheader'>" +
         "<div style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
-        "<h3 style='text-shadow:-1px 1px 0px #9e9;'>" + venue.name + "</h3>" +
-      "</div>";
-      
+        "<h3 style='text-shadow:-1px 1px 0px #9e9;' style='margin-bottom:0px; line-height:24px'>" + venue.name + "</h3>";      
     getCategory(venue.id, function(category) {
-      if (category == -1) { //No category found
-        business +=
-        "<div class='bizsection bizline'>" +
+    	if (category == -1) { //No category found
+    		business +=
           "<span><a class='kind-of-place' onClick='notRightCategory()'>What kind of place is this?</a></span>" +
           "<select class='category-dropdown' name='category' style='display:none'>" +
             "<option value='Mexican'>MEXICAN!</option>" +
             "<option value='Sandwiches'>Sandwiches</option>" +
           "</select>" +
         "</div>";
-      } else {
-        business += 
-        "<div class='bizsection bizline'>" +
+    	} else {
+    		business += 
           "<span class='kind-of-place'>" + category + " <a onClick='notRightCategory()' style='font-size:11px;color:#aaa;cursor:pointer;'><em>Not the right category?</em></a></span>" +
           "<select class='category-dropdown' name='category' style='display:none'>" +
             "<option value='Mexican'>MEXICAN!</option>" +
             "<option value='Sandwiches'>Sandwiches</option>" +
           "</select>" +
         "</div>";
-      }
-      
+    	}
       business +=
+      "<div style='text-align:center; margin: 10px;'>" +
+        "<a href='http://maps.google.com/maps?ll=" + venue.location.lat + "," + venue.location.lng + "' type='button' style='margin:5px; display: inline' class='btn btn-inverse'><i class='icon-map-marker' style='margin-right:6px'></i>Get Me There!</a>" +
+        "<a href=tel:+1" + venue.contact.phone + "' type='button' style='margin:5px; display: inline' class='btn btn-inverse'><i class='icon-phone' style='margin-right:6px'></i><strong>Call  </strong>" + venue.contact.formattedPhone + "</a>" +
+      "</div>";
+          	
+    	business +=
       "<div class='bizsection bizline'>" +
         "<address><i class='icon-home'></i> <strong>Address: </strong>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
       "</div>";
@@ -579,7 +585,7 @@
     		if (waitTime == -1) {
     			business +=
     			"<div class='bizsection bizline'>" 
-    			+ "<span> Estimated Line Length: Currently unavailable.  Feed us some data! </span>" +
+    			+ "<p> Estimated Line Length: Currently unavailable.  Feed us some data! </p>" +
     			"</div>";
     		}
     		else {
@@ -589,9 +595,23 @@
     			"</div>";
     		}
     		
+    		business +=
+    		"<div class='bizsection bizline'>" +
+    		"<div data-role='fieldcontain'>" +
+        "<span class='slider' style='float:right' for='slider'>Waiting on line?  How long is it?</span>" +
+        "<input class='slider' style='float:right' id='slider' type='range' name='slider' value='0' min='0' max='20' onchange='howManyPeople()'/>" +
+        "<span id='wait-time' onclick='lineLengthSubmit()' style='font-size:24px; margin-top:5px'>0</span>" +
+
+    		//"<input id='rangeValue' type='text' size='2'>" +
+    		"</div>" +
+    		"</div>"
+    		
+    		
     		 $('#business').append(business);
     	
+
     	});
+
     });
   }
     
@@ -604,7 +624,21 @@ var globalFoursquareId;
         prepareToGetFood(foursquareId);
         globalFoursquareId = foursquareId;
       }
+
   });
+
+  function howManyPeople () {
+    var waitTime = $('#slider').val();
+    $('#wait-time').html(waitTime + "<i class='icon-group' style='margin-left:5px'></i>");
+  }
+
+  function lineLengthSubmit() {
+    $('.slider').css('display', 'none');
+    $('#wait-time').animate({"left": "-=500px"}, "slow");
+    addWaitTime(globalFoursquareId, $('#slider').val());
+
+  }
+
 
   function notRightCategory () {
     $('.category-dropdown').css('display', 'inline');
@@ -633,6 +667,7 @@ var globalFoursquareId;
     else {
       var dayType = 'TH';
     }
+    var hours = currentTime.getHours();
     var minutes = currentTime.getMinutes();
     if (minutes < 15) {
       var interval = 'q1';
@@ -645,11 +680,13 @@ var globalFoursquareId;
     }
     
     var dayObject = {};
-    var timeObject = {};
+    var minutesObject = {};
     var intervalObject = {};
-    timeObject[uniqueTime] = numPeople;
-    intervalObject[interval] = timeObject;
-    dayObject[dayType] = intervalObject;
+    var hoursObject = {};
+    minutesObject[uniqueTime] = numPeople;
+    intervalObject[interval] = minutesObject;
+    hoursObject[hours] = intervalObject;
+    dayObject[dayType] = hoursObject;
     
     ws.update(id, dayObject);
 
@@ -728,6 +765,7 @@ function getWaitTime(id, callback){
       else {
         var dayType = 'TH';
       }
+      var hours = currentTime.getHours();
       var minutes = currentTime.getMinutes();
       if (minutes < 15) {
         var interval = 'q1';
@@ -748,18 +786,23 @@ function getWaitTime(id, callback){
       	if (!day)
       		callback(-1);
       	else {
-      		var lineCounts = day[interval];
-      		if (!lineCounts)
+      		var hour = day[hours];
+      		if (!hour)
       			callback(-1);
-      		else{
-      			var total = 0;
-      			var count = 0;
-      			for (x in lineCounts) {
-        			total += lineCounts[x];
-        			count ++;
+      		else {
+      			var lineCounts = hour[interval];
+      			if (!lineCounts)
+      				callback(-1);
+      			else{
+      				var total = 0;
+      				var count = 0;
+      				for (x in lineCounts) {
+        				total += lineCounts[x];
+        				count ++;
+      				}
+      				callback(total/count);
       			}
-      			callback(total/count);
-      		}
+      	  }
       	}
       }
       
@@ -767,6 +810,7 @@ function getWaitTime(id, callback){
     	callback(-1);
     });
 }
+
 
 window.addEventListener("resize", function() {
     if ($(window).height() < $(window).width()) {
@@ -786,10 +830,7 @@ window.addEventListener("resize", function() {
     $('#menu').css('width', '100%').css('display','inline');
   }
 
-  function hideMenu() {
-    $('#menu-layout').css('display','none');
-    $('#business').css('display', 'inline');
-  }
+
 
 </script>
 
