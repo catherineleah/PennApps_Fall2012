@@ -548,7 +548,15 @@
     		else {
     			business +=
     			"<div class='bizsection bizline'>" 
-    			+ "<span> Estimated line length: " + waitTime +"</span>" +
+    			+ "<span> Estimated line length: ";
+    			
+    			for (i = 0; i < waitTime; i++) {
+    			business += 
+    			"<i class='icon-user'></i>"
+    			
+    			}
+    			
+    			 business+= "  (" + waitTime + ")" + "</span>" +
     			"</div>";
     		}
     		
