@@ -311,7 +311,13 @@ function getWaitTime(id, callback){
         var interval = 'q4';
       }
       
-      var lineCounts = data[id][dayType][interval];
+      var truck = data[id];
+      if (!truck)
+      	callback(-1);
+      var day = truck[dayType];
+      if (!day)
+      	callback(-1);
+      var lineCounts = day[interval];
       if (!lineCounts)
       	callback(-1);
       var total = 0;
