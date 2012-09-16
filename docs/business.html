@@ -479,10 +479,19 @@
         }
 
         business += "</div>";
-          	
-    	business +=
+          
+      if (venue.location.crossStreet != undefined) {
+              business +=
       "<div class='bizsection bizline'>" +
         "<address><i class='icon-home'></i> <strong>Address: </strong>" + venue.location.address + " " + venue.location.crossStreet + "</address>";
+      }
+      if (venue.location.crossStreet == undefined) {
+                      business +=
+      "<div class='bizsection bizline'>" +
+        "<address><i class='icon-home'></i> <strong>Address: </strong>" + venue.location.address + "</address>";
+      }
+      
+
 
       getCategory(venue.id, function(category) {
       if (category == -1) { //No category found
