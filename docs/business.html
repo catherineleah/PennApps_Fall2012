@@ -196,7 +196,6 @@
         var venue = data.response.venue
         displayMap(venue.location.lat, venue.location.lng, venue);
         displayBusiness(venue);
-        displayMenu(venue);
       }
     });
   }
@@ -496,19 +495,62 @@
         business +=
           "<span><a class='kind-of-place' onClick='notRightCategory()'>What kind of place is this?</a></span>" +
           "<select class='category-dropdown' name='category' style='display:none'>" +
-            "<option value='Mexican'>MEXICAN!</option>" +
+            "<option value='Breakfast'>Breakfast</option>" +
+            "<option value='Caribbean'>Caribbean</option>" +
+            "<option value='Cheesesteaks'>Cheesesteaks</option>" +
+            "<option value='Chinese'>Chinese</option>" +
+            "<option value='Coffee'>Coffee</option>" +
+            "<option value='Dessert'>Dessert</option>" +
+            "<option value='Fruit'>Fruit</option>" +
+            "<option value='Greek'>Greek</option>" +
+            "<option value='Indian'>Indian</option>" +
+            "<option value='Japanese'>Japanese</option>" +
+            "<option value='Korean'>Korean</option>" +
+            "<option value='Mediterranean'>Mediterranean</option>" +
+            "<option value='Mexican'>Mexican</option>" +
+            "<option value='Moroccan'>Moroccan</option>" +
+            "<option value='Pizza'>Pizza</option>" +
             "<option value='Sandwiches'>Sandwiches</option>" +
+            "<option value='Thai'>Thai</option>" +
+            "<option value='Vietnamese'>Vietnamese</option>" +
           "</select>" +
         "</div>";
       } else {
         business += 
           "<span class='kind-of-place'><i class='icon-tag'></i> <strong>Category: </strong>" + category + " <a onClick='notRightCategory()' style='font-size:11px;color:#aaa;cursor:pointer;'><em>Not the right category?</em></a></span>" +
           "<select class='category-dropdown' name='category' style='display:none'>" +
-            "<option value='Mexican'>MEXICAN!</option>" +
+            "<option value='Breakfast'>Breakfast</option>" +
+            "<option value='Caribbean'>Caribbean</option>" +
+            "<option value='Cheesesteaks'>Cheesesteaks</option>" +
+            "<option value='Chinese'>Chinese</option>" +
+            "<option value='Coffee'>Coffee</option>" +
+            "<option value='Dessert'>Dessert</option>" +
+            "<option value='Fruit'>Fruit</option>" +
+            "<option value='Greek'>Greek</option>" +
+            "<option value='Indian'>Indian</option>" +
+            "<option value='Japanese'>Japanese</option>" +
+            "<option value='Korean'>Korean</option>" +
+            "<option value='Mediterranean'>Mediterranean</option>" +
+            "<option value='Mexican'>Mexican</option>" +
+            "<option value='Moroccan'>Moroccan</option>" +
+            "<option value='Pizza'>Pizza</option>" +
             "<option value='Sandwiches'>Sandwiches</option>" +
+            "<option value='Thai'>Thai</option>" +
+            "<option value='Vietnamese'>Vietnamese</option>" +
           "</select>" +
         "</div>";
     	}
+      business +=
+      "<div style='text-align:center; margin: 10px;'>" +
+        "<a href='http://maps.google.com/maps?ll=" + venue.location.lat + "," + venue.location.lng + "' type='button' style='margin:5px; display: inline' class='btn btn-inverse'><i class='icon-map-marker' style='margin-right:6px'></i>Get Me There!</a>" +
+        "<a href=tel:+1" + venue.contact.phone + "' type='button' style='margin:5px; display: inline' class='btn btn-inverse'><i class='icon-phone' style='margin-right:6px'></i><strong>Call  </strong>" + venue.contact.formattedPhone + "</a>" +
+      "</div>";
+
+    	business +=
+      "<div class='bizsection bizline'>" +
+        "<address><i class='icon-home'></i> <strong>Address: </strong>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
+      "</div>";
+      
     
     	getWaitTime(venue.id, function(waitTime) {
     	console.log(venue.id);
@@ -516,7 +558,7 @@
     		if (waitTime == -1) {
     			business +=
     			"<div class='bizsection bizline'>" 
-    			+ "<span> Estimated Line Length: Currently unavailable.  Feed us some data! </span>" +
+    			+ "<p> Estimated Line Length: Currently unavailable.  Feed us some data! </p>" +
     			"</div>";
     		}
     		else {
@@ -838,8 +880,6 @@ window.addEventListener("resize", function() {
 
   function hideBusinessInfo() {
     $('#business').css('display', 'none');
-    //$('#map-box').css('display', 'none');
-    //$('#business-map').css('display', 'none');
     $('#menu-layout').css('display','inline');
     var width = $(window).width();
     //var height = $(window).height();
@@ -849,8 +889,6 @@ window.addEventListener("resize", function() {
   function hideMenu() {
     $('#menu').css('display', 'none');
     $('#menu-layout').css('display','none');
-    //$('#map-box').css('display','inline');
-    //$('#business-map').css('display', 'inline');
     $('#business').css('display','inline');
   }
 
