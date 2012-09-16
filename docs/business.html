@@ -36,13 +36,19 @@
 
     <!-- Navbar
     ================================================== -->
-  <div id="business" style='width:100%;margin-top:-10px;'>
+  <div id="business" style='width:100%;margin-top:0px;'>
   </div>
+
+  <div id="menu-layout" style="display:none;">
+      <div id="menu" style="display:none;">
+      </div>
+  </div> 
+
 
 <style type='text/css'>
   .bizheader{
     margin:0px;
-    padding:13px 18px 5px 18px; 
+    padding:5px 18px 5px 18px; 
     background-color:#88DD77;
     border-bottom:1px solid #DDD;
   }
@@ -91,6 +97,7 @@
       },
       success: function(data) {
         displayBusiness(data.response.venue);
+        displayMenu(data.response.venue);
       }
     });
   }
@@ -113,7 +120,7 @@
         "</div>";
     	} else {
     		business += 
-          "<span class='kind-of-place'>" + category + " <a onClick='notRightCategory()'>Not the right category?</a></span>" +
+          "<span class='kind-of-place'>" + category + " <a onClick='notRightCategory()' style='font-size:11px;color:#aaa;cursor:pointer;'><em>Not the right category?</em></a></span>" +
           "<select class='category-dropdown' name='category' style='display:none'>" +
             "<option value='Mexican'>MEXICAN!</option>" +
             "<option value='Sandwiches'>Sandwiches</option>" +
@@ -135,11 +142,11 @@
           	
     	business +=
       "<div class='bizsection bizline'>" +
-        "<address>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
+        "<address><i class='icon-home'></i> <strong>Address: </strong>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
       "</div>";
       
     
-    	/*getWaitTime(venue.id, function(waitTime) {
+    	getWaitTime(venue.id, function(waitTime) {
     		if (waitTime == -1) {
     			business +=
     			"<div class='bizsection bizline'>" 
@@ -151,12 +158,23 @@
     			"<div class='bizsection bizline'>" 
     			+ "<p> Estimated line length: " + waitTime +"</p>" +
     			"</div>";
-    		}*/
+    		}
+    		
+    		business +=
+    		"<div class='bizsection bizline'>" +
+    		"<div data-role='fieldcontain'>" +
+    		"<label for='slider'>Stuck in line?  How long is it?</label>" +
+    		"<input type='range' name='slider' id='slider' value='0' min='0' max='20' />" +
+    		//"<input id='rangeValue' type='text' size='2'>" +
+    		"</div>" +
+    		"</div>"
+    		
     		
     		 $('#business').append(business);
     	
-    	//});
-    
+
+    	});
+
     });
   }
     
@@ -273,16 +291,17 @@ function getCategory(id, callback) {
     var categories = data[id].categories;
     if (!categories)
     	callback(-1);
-    
-    var maxCount = 0;
-    var max;
-    for (x in categories) {
-      if (categories[x] >= maxCount){
-        max = x;
-        maxCount = categories[x];
+    else{
+      var maxCount = 0;
+      var max;
+      for (x in categories) {
+      	if (categories[x] >= maxCount){
+          max = x;
+          maxCount = categories[x];
+        }
       }
+      callback(max);
     }
-    callback(max);
 
   }).on('error', function(data, response) {
   	callback(-1);
@@ -315,21 +334,53 @@ function getWaitTime(id, callback){
         var interval = 'q4';
       }
       
-      var lineCounts = data[id][dayType][interval];
-      if (!lineCounts)
+      var truck = data[id];
+      console.log(truck);
+      if (!truck)
       	callback(-1);
-      var total = 0;
-      var count = 0;
-      for (x in lineCounts) {
-        total += lineCounts[x];
-        count ++;
+      else {
+      	var day = truck[dayType];
+      	if (!day)
+      		callback(-1);
+      	else {
+      		var lineCounts = day[interval];
+      		if (!lineCounts)
+      			callback(-1);
+      		else{
+      			var total = 0;
+      			var count = 0;
+      			for (x in lineCounts) {
+        			total += lineCounts[x];
+        			count ++;
+      			}
+      			callback(total/count);
+      		}
+      	}
       }
-      callback(total/count);
       
     }).on('error', function(data, response) {
     	callback(-1);
     });
 }
+
+
+window.addEventListener("resize", function() {
+    if ($(window).height() < $(window).width()) {
+      hideBusinessInfo();
+    }
+    else {
+      hideMenu();
+    }
+    
+  }, false);
+
+  function hideBusinessInfo() {
+    $('#business').css('display', 'none');
+    $('#menu-layout').css('display','inline');
+    var width = $(window).width();
+    //var height = $(window).height();
+    $('#menu').css('width', '100%').css('display','inline');
+  }
 
 
 
