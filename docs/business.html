@@ -107,7 +107,7 @@
     var distanceMiles = Math.round(0.000621371 * venue.location.distance * 100) / 100;
     var business =
       "<div class='bizheader'>" +
-        "<div style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
+        "<div id='not-right-category' data-venueId='" + venue.id + "'style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
         "<h3 style='text-shadow:-1px 1px 0px #9e9;' style='margin-bottom:0px; line-height:24px'>" + venue.name + "</h3>";      
     getCategory(venue.id, function(category) {
     	if (category == -1) { //No category found
@@ -140,6 +140,8 @@
       
     
     	getWaitTime(venue.id, function(waitTime) {
+    	console.log(venue.id);
+    	console.log(waitTime);
     		if (waitTime == -1) {
     			business +=
     			"<div class='bizsection bizline'>" 
@@ -180,7 +182,7 @@ var globalFoursquareId;
         foursquareId = document.URL.substring(urlSearch);
         console.log(foursquareId);
         prepareToGetFood(foursquareId);
-        globalFoursquareId = foursquareId;
+        window.globalFoursquareId = foursquareId;
       }
 
   });
@@ -193,7 +195,7 @@ var globalFoursquareId;
   function lineLengthSubmit() {
     $('.slider').css('display', 'none');
     $('#wait-time').animate({"left": "-=500px"}, "slow");
-    addWaitTime(globalFoursquareId, $('#slider').val());
+    addWaitTime($('#not-right-category').data('venueid'), $('#slider').val());
 
   }
 
@@ -205,7 +207,7 @@ var globalFoursquareId;
     $('.category-dropdown').focusout(function() {
       var category = $('.category-dropdown').val();
       $('.kind-of-place').html(category);
-      addCategory(globalFoursquareId, category);
+      addCategory($('#not-right-category').data('venueid'), category);
     });
   }
 
@@ -236,6 +238,8 @@ var globalFoursquareId;
     } else {
       var interval = 'q4';
     }
+    console.log('id in addWaitTime:' + id);
+    console.log('numPeople:' + numPeople);
     
     var dayObject = {};
     var minutesObject = {};
@@ -261,7 +265,6 @@ function addCategory(id, category) {
       
     //if (dataObject.categories){
       var categoryObject = dataObject.categories ? dataObject.categories : {};
-      console.log(categoryObject);
       var count = categoryObject[category] ? categoryObject[category] : 0;
       count++;
       categoryObject[category] = count;
@@ -365,6 +368,7 @@ function getWaitTime(id, callback){
       }
       
     }).on('error', function(data, response) {
+    	console.log('error');
     	callback(-1);
     });
 }
