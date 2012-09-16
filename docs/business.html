@@ -148,7 +148,7 @@
       "</div>";
       
     
-    	/*getWaitTime(venue.id, function(waitTime) {
+    	getWaitTime(venue.id, function(waitTime) {
     		if (waitTime == -1) {
     			business +=
     			"<div class='bizsection bizline'>" 
@@ -160,11 +160,11 @@
     			"<div class='bizsection bizline'>" 
     			+ "<p> Estimated line length: " + waitTime +"</p>" +
     			"</div>";
-    		}*/
+    		}
     		
     		 $('#business').append(business);
     	
-    	//});
+    	});
     });
   }
     
@@ -269,16 +269,17 @@ function getCategory(id, callback) {
     var categories = data[id].categories;
     if (!categories)
     	callback(-1);
-    
-    var maxCount = 0;
-    var max;
-    for (x in categories) {
-      if (categories[x] >= maxCount){
-        max = x;
-        maxCount = categories[x];
+    else{
+      var maxCount = 0;
+      var max;
+      for (x in categories) {
+      	if (categories[x] >= maxCount){
+          max = x;
+          maxCount = categories[x];
+        }
       }
+      callback(max);
     }
-    callback(max);
 
   }).on('error', function(data, response) {
   	callback(-1);
@@ -312,21 +313,28 @@ function getWaitTime(id, callback){
       }
       
       var truck = data[id];
+      console.log(truck);
       if (!truck)
       	callback(-1);
-      var day = truck[dayType];
-      if (!day)
-      	callback(-1);
-      var lineCounts = day[interval];
-      if (!lineCounts)
-      	callback(-1);
-      var total = 0;
-      var count = 0;
-      for (x in lineCounts) {
-        total += lineCounts[x];
-        count ++;
+      else {
+      	var day = truck[dayType];
+      	if (!day)
+      		callback(-1);
+      	else {
+      		var lineCounts = day[interval];
+      		if (!lineCounts)
+      			callback(-1);
+      		else{
+      			var total = 0;
+      			var count = 0;
+      			for (x in lineCounts) {
+        			total += lineCounts[x];
+        			count ++;
+      			}
+      			callback(total/count);
+      		}
+      	}
       }
-      callback(total/count);
       
     }).on('error', function(data, response) {
     	callback(-1);
