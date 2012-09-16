@@ -75,6 +75,10 @@
 <script type="text/javascript">
 
   function redoSearch() {
+    var g = globalMap.getBounds();
+    var lat = (g.ca.f - g.ca.b) / 2 + g.ca.b;
+    var lng = (g.ea.f - g.ea.b) / 2 + g.ea.b;
+    console.log(g.ca.f + "" + g.ca.b + "" + lat);
     ll = lat + "," + lng;
     $.ajax({
       async: false,
@@ -85,17 +89,18 @@
         categoryId: "4bf58dd8d48988d1cb941735",
         client_id: "1RZ3PLTJPBAYOY4KEJDJIEUPM3CCJFRB22P3JYQZA3JCPE0Z",
         client_secret: "FDCYFIMGAQGVHNVIZ5XSHLMQCYLSCKELUPEBSB3K5TYUTNRW",
-        radius: "400",
-        limit: "100",
+        radius: "200",
+        limit: "50",
         v: "20120822"
       },
       success: function(data) {
-        displayMap(lat, lng);
+        $('#scroll').html("");
         $.each(data.response.venues, function(index, venues) {
-          console.log(venues.name);
-          foursquareToDisplay(venues);
-          setMarker(globalMap, venues.location.lat, venues.location.lng, venues.name);
-
+          if (venues.stats.usersCount > 20) {
+            console.log(venues.name);
+            setMarker(globalMap, venues.location.lat, venues.location.lng, venues.name);
+            foursquareToDisplay(venues);
+          }
         });
       }
     });
@@ -131,17 +136,18 @@
         categoryId: "4bf58dd8d48988d1cb941735",
         client_id: "1RZ3PLTJPBAYOY4KEJDJIEUPM3CCJFRB22P3JYQZA3JCPE0Z",
         client_secret: "FDCYFIMGAQGVHNVIZ5XSHLMQCYLSCKELUPEBSB3K5TYUTNRW",
-        radius: "400",
-        limit: "100",
+        radius: "200",
+        limit: "50",
         v: "20120822"
       },
       success: function(data) {
         displayMap(lat, lng);
         $.each(data.response.venues, function(index, venues) {
-          console.log(venues.name);
-          foursquareToDisplay(venues);
-          setMarker(globalMap, venues.location.lat, venues.location.lng, venues.name);
-
+          if (venues.stats.usersCount > 20) {
+            console.log(venues.name + " " + venues.stats.usersCount);
+            foursquareToDisplay(venues);
+            setMarker(globalMap, venues.location.lat, venues.location.lng, venues.name);
+          }
         });
       }
     });
@@ -283,7 +289,6 @@ function closeInfos(){
     infos.length = 0;
   }
 }
-
 
 
 </script>
