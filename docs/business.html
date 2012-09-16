@@ -105,15 +105,23 @@
       "</div>";
       
     getCategory(venue.id, function(category) {
-    	if (category == -1){ //No category found
+    	if (category == -1) { //No category found
     		business +=
         "<div class='bizsection bizline'>" +
-          "<span><a href='notRightCategory()'>What kind of place is this?</a></span>" +
+          "<span><a class='kind-of-place' onClick='notRightCategory()'>What kind of place is this?</a></span>" +
+          "<select class='category-dropdown' name='category' style='display:none'>" +
+            "<option value='Mexican'>MEXICAN!</option>" +
+            "<option value='Sandwiches'>Sancwiches</option>" +
+          "</select>" +
         "</div>";
     	} else {
     		business += 
         "<div class='bizsection bizline'>" +
-          "<span>" + category + "<a href='notRightCategory()'>Not the right category?</a></span>" +
+          "<span class='kind-of-place'>" + category + " <a onClick='notRightCategory()'>Not the right category?</a></span>" +
+          "<select class='category-dropdown' name='category' style='display:none'>" +
+            "<option value='Mexican'>MEXICAN!</option>" +
+            "<option value='Sandwiches'>Sandwiches</option>" +
+          "</select>" +
         "</div>";
     	}
     	
@@ -123,7 +131,7 @@
       "</div>";
       
     
-    	getWaitTime(venue.id, function(waitTime) {
+    	/*getWaitTime(venue.id, function(waitTime) {
     		if (waitTime == -1) {
     			business +=
     			"<div class='bizsection bizline'>" 
@@ -135,60 +143,72 @@
     			"<div class='bizsection bizline'>" 
     			+ "<p> Estimated line length: " + waitTime +"</p>" +
     			"</div>";
-    		}
+    		}*/
     		
     		 $('#business').append(business);
     	
-    	});
+    	//});
     
     });
   }
     
-
+var globalFoursquareId;
   $(function () {
       var urlSearch = document.URL.search("\\?")+1;
       if (urlSearch != -1) {
         foursquareId = document.URL.substring(urlSearch);
         console.log(foursquareId);
         prepareToGetFood(foursquareId);
+        globalFoursquareId = foursquareId;
       }
   });
 
+  function notRightCategory () {
+    $('.category-dropdown').css('display', 'inline');
+    $('.category-dropdown').trigger('focus');
+    $('.category-dropdown').css('display', 'none');
+    $('.category-dropdown').focusout(function() {
+      var category = $('.category-dropdown').val();
+      $('.kind-of-place').html(category);
+      addCategory(globalFoursquareId, category);
+    });
+  }
+
 
   function addWaitTime(id, numPeople) {
-  var ws = new cloudmine.WebService({
-    appid: "c74de725f3954f6d9ba3f92489c58ac4",
-    apikey: "d15e4a05041741c88acb40e28d9ffc1e"
-  });
-  
-  var currentTime = new Date();
-  var uniqueTime = currentTime.getTime();
-  var day = currentTime.getDate();
-  if (day == 0 || day == 1 || day == 3 || day == 5){
-    var dayType = 'MWF';
-  }
-  else {
-    var dayType = 'TH';
-  }
-  var minutes = currentTime.getMinutes();
-  if (minutes < 15) {
-    var interval = 'q1';
-  } else if (minutes < 30) {
-    var interval = 'q2';
-  } else if (minutes < 45) {
-    var interval = 'q3';
-  } else {
-    var interval = 'q4';
-  }
-  
-  var dayObject = {};
-  var timeObject = {};
-  var intervalObject = {};
-  timeObject[uniqueTime] = numPeople;
-  intervalObject[interval] = timeObject;
-  dayObject[dayType] = intervalObject;
-  
-  ws.update(id, dayObject);
+    var ws = new cloudmine.WebService({
+      appid: "c74de725f3954f6d9ba3f92489c58ac4",
+      apikey: "d15e4a05041741c88acb40e28d9ffc1e"
+    });
+    
+    var currentTime = new Date();
+    var uniqueTime = currentTime.getTime();
+    var day = currentTime.getDate();
+    if (day == 0 || day == 1 || day == 3 || day == 5){
+      var dayType = 'MWF';
+    }
+    else {
+      var dayType = 'TH';
+    }
+    var minutes = currentTime.getMinutes();
+    if (minutes < 15) {
+      var interval = 'q1';
+    } else if (minutes < 30) {
+      var interval = 'q2';
+    } else if (minutes < 45) {
+      var interval = 'q3';
+    } else {
+      var interval = 'q4';
+    }
+    
+    var dayObject = {};
+    var timeObject = {};
+    var intervalObject = {};
+    timeObject[uniqueTime] = numPeople;
+    intervalObject[interval] = timeObject;
+    dayObject[dayType] = intervalObject;
+    
+    ws.update(id, dayObject);
 
 }
 
@@ -230,7 +250,6 @@ function getCategory(id, callback) {
     });
 
   ws.get(id).on('success', function(data, response) {
-  	alert('success');
     var categories = data[id].categories;
     if (!categories)
     	callback(-1);
