@@ -36,8 +36,15 @@
 
     <!-- Navbar
     ================================================== -->
+    <div id="map-container">
+      <div id="business-map" style="height:100px">
+      </div>
+    </div>
+
   <div id="business" style='width:100%;margin-top:0px;'>
   </div>
+
+
 
   <div id="menu-layout" style="display:none;">
       <div id="menu" style="display:none;">
@@ -69,6 +76,7 @@
 
   function prepareToGetFood(foursquareId) { 
     findBusiness(foursquareId, 39.953323, -75.201333);
+
     /*
     navigator.geolocation.getCurrentPosition(GetLocation);
       function GetLocation(location) {
@@ -96,8 +104,9 @@
         v: "20120822"
       },
       success: function(data) {
-        displayBusiness(data.response.venue);
-        displayMenu(data.response.venue);
+        var venue = data.response.venue
+        displayMap(venue.location.lat, venue.location.lng, venue);
+        displayBusiness(venue);
       }
     });
   }
@@ -132,7 +141,7 @@
         "<a href='http://maps.google.com/maps?ll=" + venue.location.lat + "," + venue.location.lng + "' type='button' style='margin:5px; display: inline' class='btn btn-inverse'><i class='icon-map-marker' style='margin-right:6px'></i>Get Me There!</a>" +
         "<a href=tel:+1" + venue.contact.phone + "' type='button' style='margin:5px; display: inline' class='btn btn-inverse'><i class='icon-phone' style='margin-right:6px'></i><strong>Call  </strong>" + venue.contact.formattedPhone + "</a>" +
       "</div>";
-          	
+
     	business +=
       "<div class='bizsection bizline'>" +
         "<address><i class='icon-home'></i> <strong>Address: </strong>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
@@ -184,6 +193,79 @@ var globalFoursquareId;
       }
 
   });
+
+
+function displayMap(lat, lng, venue) {
+
+  var name = document.getElementById("business-map").dataset.name;
+  var zoom;
+
+    zoom = 16;
+
+
+  var myOptions = {
+    zoom: zoom,
+    center: new google.maps.LatLng(lat,lng),
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    mapTypeControl: false,
+    zoomControlOptions: {
+        position: google.maps.ControlPosition.TOP_RIGHT
+    }
+  }
+  var map = new google.maps.Map(document.getElementById("business-map"),
+                                myOptions);
+
+  setMarker(map, lat, lng, venue.name);
+
+}
+
+var infos = [];
+
+function setMarker(map, lat, lng, name) {
+  // Add markers to the map
+
+  // Marker sizes are expressed as a Size of X,Y
+  // where the origin of the image (0,0) is located
+  // in the top left of the image.
+
+  // Origins, anchor positions and coordinates of the marker
+  // increase in the X direction to the right and in
+  // the Y direction down.
+
+  var myLatLng = new google.maps.LatLng(lat, lng);
+
+  var contentString = 
+      '<div class="infoWindow">' +
+        '<h6>' + name + '</h6>' +
+      '</div>';
+
+  var marker = new google.maps.Marker({
+      position: myLatLng,
+      map: map,
+      title: name,
+      content: contentString,
+      zIndex: 1,
+  });
+  google.maps.event.addListener(marker, 'click', function() {
+    /* close the previous info-window */
+    closeInfos();
+    var centerLatLng = new google.maps.LatLng(lat + 0.0016, lng);
+    map.panTo(centerLatLng);
+
+
+    /* the marker's content gets attached to the info-window: */
+    var info = new google.maps.InfoWindow({
+      content: this.content, 
+      maxWidth: 50, 
+      disableAutoPan: true, 
+    });
+    /* trigger the infobox's open function */
+    info.open(map,this);
+
+    /* keep the handle, in order to close it on next click event */
+    infos[0]=info;
+  });
+}
 
   function howManyPeople () {
     var waitTime = $('#slider').val();
