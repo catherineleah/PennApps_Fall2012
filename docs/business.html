@@ -225,6 +225,7 @@ var globalFoursquareId;
     else {
       var dayType = 'TH';
     }
+    var hours = currentTime.getHours();
     var minutes = currentTime.getMinutes();
     if (minutes < 15) {
       var interval = 'q1';
@@ -237,11 +238,13 @@ var globalFoursquareId;
     }
     
     var dayObject = {};
-    var timeObject = {};
+    var minutesObject = {};
     var intervalObject = {};
-    timeObject[uniqueTime] = numPeople;
-    intervalObject[interval] = timeObject;
-    dayObject[dayType] = intervalObject;
+    var hoursObject = {};
+    minutesObject[uniqueTime] = numPeople;
+    intervalObject[interval] = minutesObject;
+    hoursObject[hours] = intervalObject;
+    dayObject[dayType] = hoursObject;
     
     ws.update(id, dayObject);
 
@@ -320,6 +323,7 @@ function getWaitTime(id, callback){
       else {
         var dayType = 'TH';
       }
+      var hours = currentTime.getHours();
       var minutes = currentTime.getMinutes();
       if (minutes < 15) {
         var interval = 'q1';
@@ -340,18 +344,23 @@ function getWaitTime(id, callback){
       	if (!day)
       		callback(-1);
       	else {
-      		var lineCounts = day[interval];
-      		if (!lineCounts)
+      		var hour = day[hours];
+      		if (!hour)
       			callback(-1);
-      		else{
-      			var total = 0;
-      			var count = 0;
-      			for (x in lineCounts) {
-        			total += lineCounts[x];
-        			count ++;
+      		else {
+      			var lineCounts = hour[interval];
+      			if (!lineCounts)
+      				callback(-1);
+      			else{
+      				var total = 0;
+      				var count = 0;
+      				for (x in lineCounts) {
+        				total += lineCounts[x];
+        				count ++;
+      				}
+      				callback(total/count);
       			}
-      			callback(total/count);
-      		}
+      	  }
       	}
       }
       
