@@ -36,17 +36,17 @@
 
     <!-- Navbar
     ================================================== -->
-  <div id="business" style='width:100%;margin-top:-10px;'>
+  <div id="business" style='width:100%;margin-top:0px;'>
   </div>
   <div id="menu-layout" style="display:none;">
-      <div id="menu">
+      <div id="menu" style="display:none;">
       </div>
   </div> 
 
 <style type='text/css'>
   .bizheader{
     margin:0px;
-    padding:13px 18px 5px 18px; 
+    padding:5px 18px 5px 18px; 
     background-color:#88DD77;
     border-bottom:1px solid #DDD;
   }
@@ -98,6 +98,7 @@
       },
       success: function(data) {
         displayBusiness(data.response.venue);
+        displayMenu(data.response.venue);
       }
     });
   }
@@ -143,7 +144,7 @@
       
       business +=
       "<div class='bizsection bizline'>" +
-        "<address>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
+        "<address><i class='icon-home'></i> <strong>Address: </strong>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
       "</div>";
       
     
@@ -347,7 +348,7 @@ window.addEventListener("resize", function() {
     $('#menu-layout').css('display','inline');
     var width = $(window).width();
     //var height = $(window).height();
-    $('#menu').css('width', '100%');
+    $('#menu').css('width', '100%').css('display','inline');
   }
 
   function hideMenu() {
