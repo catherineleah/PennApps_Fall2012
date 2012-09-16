@@ -221,7 +221,18 @@
               "<div class='menuItemName'>" + name + "</div>" +
               "<div class='menuItemPrice1'>" + price1 + "</div>" +
               "<div class='menuItemPrice2'>" + price2 + "</div>" +
-              "<div class='menuItemStars'>" + stars + "</div>" + "</div>";
+              "<div class='menuItemStars'>";
+
+      "<div class='menuItemStars'>";
+
+    for (var i = 1; i <= 5; i++){
+      if (stars >= i)
+          temp += "<i class='icon-star'></i>";
+      else
+          temp += "<i class='icon-star-empty'></i>";
+    }
+     
+    temp += "</div>" + "</div>";
     return temp;
   }
 
