@@ -57,7 +57,7 @@
     margin:0px;
     padding:5px 18px 5px 18px; 
     background-color:#88DD77;
-    border-bottom:1px solid #DDD;
+    border-bottom:1px solid #CCC;
   }
   .bizsection{
     margin:0px;
@@ -69,6 +69,95 @@
   .bizline{
     border-bottom:1px solid #DDD;
   }
+
+  .bizsection a:hover{
+      text-decoration:none;
+  }
+  .menuSectionHeader{
+    width:100%;
+    margin:22px 0px 10px 0px;
+    border-bottom:1px solid #CCC;
+    padding:0px;
+    color:#111;
+  }
+  .menuSectionTitle{
+    font-weight:bold;
+    color:#999;
+    font-size:12px;
+    margin:0px 20px 0px 20px;
+    text-transform:uppercase;
+  }
+  .menuItem{
+    width:100%;
+    display:inline-block;
+    border:0px solid red;
+    height:18px;
+    font-size:12px;
+  }
+  .menuItemLarger{
+    width:100%;
+    display:inline-block;
+    border:0px solid red;
+    height:25px;
+    font-size:12px;
+  }
+  .menuItemLargerDesc{
+    width:100%;
+    display:inline-block;
+    border:0px solid red;
+  }
+  .menuItemName{
+    margin-left:20px;
+    width:50%;
+    min-width:220px;
+    float:left;
+    border:0px solid blue;
+    font-weight:bold;
+  }
+  .menuItemNameSub{
+    margin-left:20px;
+    width:50%;
+    min-width:200px;
+    float:left;
+    border:0px solid blue;
+    font-style:italic;
+  }
+  .menuItemPrice1{
+    margin-left:10px;
+    float:left;
+    width:12%;
+    min-width:50px;
+    border:0px solid yellow;
+  }
+  .menuItemPrice2{
+    margin-left:10px;
+    float:left;
+    width:12%;
+    min-width:50px;
+    border:0px solid magenta;
+  }
+  .menuItemStars{
+    margin-left:10px;
+    margin-right:20px;
+    float:right;
+    width:11%;
+    min-width:50px;
+    border:0px solid aqua;
+  }
+  .menuItemNote{
+    margin-left:20px;
+    font-style:italic;
+    color:#88DD77;
+  }
+  .menuItemDescription{
+    margin-left:20px;
+    margin-right:20px;
+    margin-bottom:10px;
+    color:#999;
+    margin-top:-5px;
+    font-size:12px;
+  }
+
 </style>
 
 <script type="text/javascript">
@@ -112,24 +201,296 @@
   }
 
 
+  function generateMenuSection(title){
+    return "<div class='menuSectionHeader'><div class='menuSectionTitle'>" + title + "</div></div>";
+  }
+
+  function generateMenuNote(note){
+    return "<div class='menuItemLarger'>" +
+              "<div class='menuItemNote'>" + note + "</div>" + "</div>";
+  }
+
+  function generateMenuItemDescription(desc){
+    return "<div class='menuItemLargerDesc'>" +
+              "<div class='menuItemDescription'>" + desc + "</div>" + "</div>";
+  }
+
+  function generateMenuItem(name, price1, price2, stars){
+    var temp = "<div class='menuItem'>" +
+              "<div class='menuItemName'>" + name + "</div>" +
+              "<div class='menuItemPrice1'>" + price1 + "</div>" +
+              "<div class='menuItemPrice2'>" + price2 + "</div>" +
+              "<div class='menuItemStars'>" + stars + "</div>" + "</div>";
+    return temp;
+  }
+
+  function generateMenuItemv2(name, price1, stars){
+    var temp = "<div class='menuItem'>" +
+              "<div class='menuItemName'>" + name + "</div>" +
+              "<div class='menuItemPrice1'>" + price1 + "</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemStars'>";
+
+    for (var i = 1; i <= 5; i++){
+      if (stars >= i)
+          temp += "<i class='icon-star'></i>";
+      else
+          temp += "<i class='icon-star-empty'></i>";
+    }
+     
+    temp += "</div>" + "</div>";
+    return temp;
+  }
+
+  function generateMenuItemSub(sub, price, stars){
+    var temp = "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;" + sub + "</div>" +
+              "<div class='menuItemPrice1'>" + price + "</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemStars'>";
+
+    for (var i = 1; i <= 5; i++){
+      if (stars >= i)
+          temp += "<i class='icon-star'></i>";
+      else
+          temp += "<i class='icon-star-empty'></i>";
+    }
+
+    temp += "</div>" + "</div>";
+    return temp;
+  }
+
+  function displayMenu(venue){
+      var distanceMiles = Math.round(0.000621371 * venue.location.distance * 100) / 100;
+      var menudisplay = 
+        "<div class='bizheader'>" +
+          "<div style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
+          "<h3 style='text-shadow:-1px 1px 0px #9e9;'>" + venue.name + " Menu</h3>" +
+        "</div>";
+
+      if (venue.name == "Hemo's"){
+        menudisplay += 
+          "<div style='margin:0px;padding:0px;margin-bottom:25px;'>" +
+            generateMenuSection("Breakfast") +
+              generateMenuItem("Eggs on a roll", "1.50 small", "2.25 large", 0) + generateMenuItem("Eggs and cheese", "1.75 small", "2.50 large", 0) +
+              generateMenuItem("Bacon, Egg and Cheese", "2.25 small", "3.00 large", 0) + generateMenuItem("Ham, Egg and Cheese", "2.25 small", "3.00 large", 0) +
+              generateMenuItem("Sausage, Egg and Cheese", "2.25 small", "3.00 large", 0) + generateMenuItem("Steak, Egg and Cheese", "3.25 small", "4.25 large", 0) +
+              generateMenuItem("BLT", "2.50 small", "3.50 large", 0) + generateMenuItem("BLT with cheese", "2.75 small", "3.75 large", 0) +
+
+            generateMenuSection("Lunch") +
+              generateMenuItem("Meatballs", "1.50 small", "2.25 large", 0) + generateMenuItem("Spinach Sub", "1.75 small", "2.50 large", 0) +
+              generateMenuItemSub("with eggs", "add 1.00", 0) + generateMenuItem("Beef Hot Dog", "1.50", "&nbsp;", 0) +
+              generateMenuItem("Beef Hot Sausage", "2.25", "&nbsp;", 0) +
+
+            generateMenuSection("Cheese Steaks") +
+              generateMenuItem("Beef Cheese Steak", "3.00 small", "4.00 large", 0) + generateMenuItem("Chicken Cheese Steak", "3.00 small", "4.00 large", 0) +
+              generateMenuItemSub("with extra meat", "add 0.50", 0) + generateMenuItemSub("with mushrooms", "add 0.50", 0) +
+              generateMenuItemSub("with BBQ or HEMO sauce", "add 0.25", 0) + generateMenuItemSub("with lettuce/tomato", "add 0.50", 0) +
+
+            generateMenuSection("Grilled Chicken") +
+              generateMenuNote("Served with choice of Hemo Sauce, Hemo II Sauce, BBQ Sauce or Teriyaki Sauce") + generateMenuItem("Grilled Chicken", "3.25 small", "4.25 large", 0) +
+              generateMenuItemSub("with tomato/lettuce/spinach", "add 0.25", 0) + generateMenuItemSub("with cheese", "add 0.25", 0) +
+              generateMenuItemSub("with eggs", "add 1.00", 0) + generateMenuItemSub("with mushrooms", "add 0.50", 0) +
+              generateMenuItemSub("with extra chicken", "add 1.50", 0) + generateMenuItemSub("with mushrooms/onions/green peppers", "add 0.75", 0) +
+
+            generateMenuSection("Pitas") +
+              generateMenuItem("Grilled Chicken with lettuce & tomato", "3.50", "&nbsp;", 0) + generateMenuItemSub("with tomato/lettuce/spinach", "add 0.25", 0) +
+              generateMenuItemSub("with cheese", "add 0.25", 0) + "</div>";
+
+      }
+      else if (venue.name == "House of Pita"){ 
+        // House of Pita Menu
+
+      }
+      else if (venue.name == "Steak Queen"){
+        // Steak Queen Menu
+        menudisplay += "<div style='margin:0px;padding:0px;margin-bottom:25px;'>" +
+          generateMenuSection("Breakfast Sandwiches") +
+            generateMenuNote("Add double eggs to your order for 1.50 | Egg whites available upon request") + generateMenuItemv2("Eggs on a roll", "2.25", 0) +
+            generateMenuItemv2("Eggs & Cheese", "2.75", 0) + generateMenuItemv2("Bacon, Egg & Cheese", "3.50", 0) +
+            generateMenuItemv2("Turkey Bacon, Egg & Cheese", "3.50", 0) + generateMenuItemv2("Sausage, Egg & Cheese", "3.50", 0) +
+            generateMenuItemv2("Ham, Eggs & Cheese", "3.50", 0) + generateMenuItemv2("Pork Roll, Eggs & Cheese", "3.50", 0) +
+            generateMenuItemv2("Steak, Eggs & Cheese", "3.50", 0) + generateMenuItemSub("with spinach, mushroom or roasted peppers", "add 0.50",0) +
+            generateMenuItemSub("with egg whites","add 2.25",0) + generateMenuItemv2("Double Egg Whites & Cheese","4.25","&nbsp;",0) +
+
+          generateMenuSection("Steaks") +
+            generateMenuItemv2("Plain Steak (no cheese)", "4.75", 0) + generateMenuItemv2("Philly Steak", "5.25", 0) +
+            generateMenuItemv2("Pepper Steak", "5.25", 0) + generateMenuItemv2("Pepper Cheese Steak", "5.75", 0) +
+            generateMenuItemv2("Mushroom Steak", "5.25", 0) + generateMenuItemv2("Mushroom Cheese Steak", "5.75", 0) +
+            generateMenuItemv2("Pizza Steak", "5.75", 0) + generateMenuItemv2("Cheese Steak Hoagie", "5.75", 0) +
+            generateMenuItemv2("Cowboy Cheese Steak w. BBQ Sauce", "5.75", 0) + generateMenuItemv2("Buffalo Steak (Blue Cheese, Hot Sauce)", "5.75", 0) +
+            generateMenuItemv2("Campus Steak (Roasted Pepper, Provolone)", "5.75", 0) + generateMenuItemv2("Spinach Cheese Steak", "5.75", 0) +
+            generateMenuItemv2("Main's Steak w. Pepper, Onion, Mozzarella & Sauce", "6.00", 0) + generateMenuItemv2("Pepper Mushroom Cheese Steak", "6.25", 0) +
+            generateMenuItemv2("Chicken Steak (no cheese)", "5.00", 0) + generateMenuItemv2("Chicken Cheese Steak w. choice of cheese", "5.50", 0) +
+            generateMenuItemv2("Pepper Chicken Steak", "5.50", 0) + generateMenuItemv2("Pepper Chicken Cheese Steak", "6.00", 0) +
+            generateMenuItemv2("Mushroom Chicken Steak", "5.50", 0) + generateMenuItemv2("Mushroom Chicken Cheese Steak", "6.00", 0) +
+            generateMenuItemv2("Pizza Chicken Steak", "6.00", 0) + generateMenuItemv2("Chicken Cheese Hoagie", "6.00", 0) +
+            generateMenuItemv2("Cowboy Chicken Cheese Steak w. BBQ Sauce", "6.00", 0) + generateMenuItemv2("Buffalo Chicken Steak", "6.00", 0) +
+            generateMenuItemv2("Campus Chicken Steak (Roasted Pepper, Provolone)", "6.00", 0) + generateMenuItemv2("Spinach Chicken Cheese Steak", "6.00", 0) +
+            generateMenuItemv2("Main's Chicken Steak (Pepper, Onion, Mozzarella)", "6.25", 0) + generateMenuItemv2("Pepper Mushroom Chicken Cheese Steak", "6.50", 0) +
+
+          generateMenuSection("Wraps") + 
+            generateMenuItemv2("Honey Turkey Wrap", "5.25", 0) + generateMenuItemv2("Chicken Caesar Wrap", "5.25", 0) +
+            generateMenuItemv2("Chicken Steak Wrap", "5.25", 0) + generateMenuItemv2("Tuna Salad Wrap", "5.25", 0) +
+            generateMenuItemv2("Chicken Salad Wrap", "5.25", 0) + generateMenuItemv2("Honey Chicken Wrap", "5.25", 0) +
+            generateMenuItemv2("Turkey Wrap", "5.25", 0) + generateMenuItemv2("Chicken Spinach Wrap", "5.25", 0) +
+            generateMenuItemv2("Chicken Spinach Wrap w. Roasted Peppers", "5.25", 0) + generateMenuItemv2("Buffalo Chicken Wrap w. Hot Sauce & Blue Cheese", "5.25", 0) +
+            generateMenuItemv2("BBQ Chicken Wrap", "5.25", 0) + generateMenuItemv2("Pepper Chicken Wrap", "5.25", 0) +
+            generateMenuItemv2("Mushroom Chicken Wrap", "5.25", 0) + generateMenuItemSub("with pickles, hot or sweet peppers", "add 0.25", 0) +
+
+          generateMenuSection("Burgers") +
+            generateMenuItemv2("Hamburger", "3.50", 0) + generateMenuItemv2("Cheeseburger", "4.00", 0) +
+            generateMenuItemv2("Bacon Cheeseburger", "4.50", 0) +
+
+          generateMenuSection("Cold Sandwiches") + 
+            generateMenuItemv2("Turkey Sandwich", "3.25", 0) + generateMenuItemv2("Tuna Salad Sandwich", "3.25", 0) +
+            generateMenuItemv2("Chicken Salad Sandwich", "3.25", 0) + generateMenuItemv2("BLT", "3.25", 0) +
+
+          generateMenuSection("Hoagies") +
+            generateMenuItemv2("Turkey Hoagie", "4.75", 0) + generateMenuItemv2("Tuna Salad Hoagie", "4.75", 0) + generateMenuItemv2("Chicken Salad Hoagie", "4.75", 0) + 
+
+          "</div>";
+      }
+      else if (venue.name == "Bui's"){
+        // Bui's Menu
+        menudisplay += "<div style='margin:0px;padding:0px;margin-bottom:25px;'>" +
+          generateMenuSection("Breakfast - Served All Day") + 
+            generateMenuItemv2("Eggs", "2.75", 0) + generateMenuItemv2("Eggs & Cheese", "3.00", 0) + generateMenuItemv2("Ham & Eggs", "3.25", 0) +
+            generateMenuItemv2("Pork Bacon & Eggs", 3.25, 0) + generateMenuItemv2("Sausage & Eggs", 3.25, 0) + generateMenuItemv2("Sausage & Roll", 3.25, 0) + 
+            generateMenuItemv2("Sausage & Cheese", 3.75, 0) + generateMenuItemv2("Turkey Bacon & Eggs", "4.00", 0) + generateMenuItemv2("Scrapple & Eggs", "4.00", 0) + 
+            generateMenuItemv2("Porkroll & Eggs", "4.00", 0) + generateMenuItemv2("Pork Roll", "3.50", 0) + generateMenuItemv2("Pork Roll & Cheese", "4.00", 0) +
+            generateMenuItemv2("Egg Whites", 3.25, 0) + generateMenuItemv2("Egg Whites & Cheese", "3.50", 0) + generateMenuItemv2("Double Egg Whites", 4.25, 0) + 
+            generateMenuItemv2("Double Egg Whites & Cheese", 4.75, 0) + generateMenuItemv2("Turkey Bacon & Egg Whites", 4.75, 0) + 
+            generateMenuItemv2("Turkey Bacon, Egg Whites & Cheese", "5.00", 0) + generateMenuItemv2("Double Egg Whites & Turkey Bacon", "6.00", 0) + 
+
+          generateMenuSection("Breakfast Extras") +
+            generateMenuItemv2("Onion", "<em>free</em>", 0) + generateMenuItemv2("Lettuce", "<em>free</em>", 0) + generateMenuItemv2("Tomato", "<em>free</em>", 0) + 
+            generateMenuItemv2("Mushroom", "<em>free</em>", 0) + generateMenuItemv2("Spinach", "<em>free</em>", 0) + generateMenuItemv2("Pepper", "<em>free</em>", 0) + 
+            generateMenuItemv2("Cheese", "0.50", 0) + generateMenuItemv2("Ham or Sausage", "1.00", 0) + generateMenuItemv2("Pork Bacon", 1.25, 0) + 
+            generateMenuItemv2("Turkey Bacon", "1.50", 0) +
+
+          generateMenuSection("Hoagies") +
+            generateMenuItemv2("Egg Salad", "4.00", 0) + generateMenuItemv2("Cheese Hoagie", "4.00", 0) + generateMenuItemv2("Meatball", "4.00", 0) + 
+            generateMenuItemv2("Ham & Cheese", "4.50", 0) + generateMenuItemv2("Turkey & Cheese", "4.50", 0) + generateMenuItemv2("Tuna Fish", "4.50", 0) + 
+            generateMenuItemv2("Chicken Salad", "5.00", 0) + generateMenuItemv2("BLT (Pork Bacon)", "5.00", 0) + generateMenuItemv2("BLT (Turkey Bacon)", "5.00", 0) + 
+
+          generateMenuSection("Steaks") +
+            generateMenuItemv2("Plain Steak", "4.00", 0) + generateMenuItemv2("Cheese Steak", "4.50", 0) + generateMenuItemv2("Chicken Steak", "4.50", 0) + 
+            generateMenuItemv2("Pepper Steak", "5.00", 0) + generateMenuItemv2("Pizza Steak", "5.00", 0) + generateMenuItemv2("Mushroom Steak", "5.00", 0) + 
+            generateMenuItemv2("Steak & Eggs", 5.25, 0) + generateMenuItemv2("Steak, Eggs & Cheese", 5.75, 0) + generateMenuItemv2("Steak, Egg Whites & Cheese", 6.25, 0) + 
+
+          generateMenuSection("Sandwiches") +
+            generateMenuItemv2("Grilled Cheese", "3.00", 0) + generateMenuItemv2("Egg Salad", "3.00", 0) + generateMenuItemv2("Ham", "3.00", 0) + 
+            generateMenuItemv2("Turkey", "3.00", 0) + generateMenuItemv2("Tuna Fish", "3.00", 0) + generateMenuItemv2("Chicken Salad", "4.00", 0) + 
+            generateMenuItemv2("BLT (Pork Bacon)", "3.50", 0) + generateMenuItemv2("BLT (Turkey Bacon)", "4.00", 0) + 
+
+          generateMenuSection("Burgers & More") +
+            generateMenuItemv2("Hamburger", "2.50", 0) + generateMenuItemv2("Double Hamburger", "3.50", 0) + generateMenuItemv2("Bacon Hamburger", "3.00", 0) + 
+            generateMenuItemv2("Pizza Hamburger", 2.75, 0) + generateMenuItemv2("Hot Dog", 1.75, 0) + generateMenuItemv2("Cheeseburger", 2.75, 0) + 
+            generateMenuItemv2("Double Cheeseburger", 3.75, 0) + generateMenuItemv2("Bacon Cheeseburger", 3.25, 0) + 
+            generateMenuItemv2("Pizza Cheeseburger", "3.00", 0) + generateMenuItemv2("Hot Sausage", 2.75, 0) + 
+
+          "</div>";
+
+      }
+      else if (venue.name == "Troy"){
+        // Troy Menu
+
+      }
+      else if (venue.name == "Lovash"){
+        // Lovash Menu
+
+      }
+      else if (venue.name == "Chez Yasmine"){
+        // Chez Yasmine Menu
+        menudisplay += 
+          "<div style='margin:0px;padding:0px;margin-bottom:25px;'>" + 
+            generateMenuSection("Food") + generateMenuNote("Free water and fruit with every order") +
+              generateMenuItem("The Wistar", "6.00", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Brie, sautéed mushrooms, avocado, basil pesto, herbes de Provence served on 11\" roll or baguette.") + 
+              generateMenuItem("The Wharton", "6.00", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Dolphin-safe albacore tuna, tomato, lettuce, Emmental cheese, carrot, hard-boiled eggs, mayo & herbes de Provence on a 11\" roll or baguette.") + 
+              generateMenuItem("Vegetarian Banh Mi", "6.00", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Tofu, ginger, pickled carrots, cucumber, cilantro, jalapeño pepper, mayonnaise and soy sauce served on 11\" roll.") + 
+              generateMenuItem("Chicken Banh Mi", "6.00", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Free-range chicken breast, ginger, pickled carrots, cucumber, cilantro, jalapeño pepper, mayonnaise and soy sauce served on 11\" roll.") + 
+              generateMenuItem("Ménage a Trois Grilled Cheese & Soup", "6.00", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Cheddar, Monterey Jack, and Emmental served on rustic bread with jalapeño pepper. Grilled to perfection with cornichons on the side.") + 
+              generateMenuItem("La Soupe du Jour", "3.00", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Choice of vegetarian or non-vegetarian soup, served with bread or fiber-rich Swedish crackers.") + 
+              generateMenuItem("The Nikki: Swedish Salmon Smörgås", "6.25", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Smoked salmon, cucumber, radishes, hard-boiled egg, dill, lemon, and capers. A sprinkle of caviar. Best served on baguette, rye or pumpernickel bread.") + 
+              generateMenuItem("Le Josie", "6.25", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Open-face Swedish Salmon Smörgås.") + 
+              generateMenuItem("Tunisian Sandwich", "6.00", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Dolphin-safe tuna, hard-boiled egg, tomato, green pepper, chives, olives, cucumber, mint, parsley, and a dressing of lemon juice & extra virgin olive oil with spicy harissa served on 11\" inch roll or baguette.") + 
+              generateMenuItem("PB & J", "2.75", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Smooth or creamy PB, grape/strawberry/apricot jam, Nutella (add $0.50), bakery white or whole wheat bread.") + 
+              generateMenuItem("The Gretchen: Quinoa Salad", "6.25", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Organic quinoa, French feta cheese, organic kale, cucumber, carrot, spring mix, red cabbage, cilantro, mixed nuts. A dressing of lemon juice & extra virgin olive oil, served with 4\" roll or baguette.") + 
+              generateMenuItem("Swedish Berry Salad", "4.00", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Strawberries, raspberries, blackberries, blueberries, grapes, kiwis. Sprinkled with fresh chopped mint and a touch of rose water. <em>(When available)</em>") + 
+              generateMenuItem("Vegetarian Couscous", "6.25", "&nbsp;", "estimated calories") + 
+              generateMenuItemDescription("Potatoes, carrots, turnips, zucchini, chard, cabbage, bell peppers, garbanzo beans. Prepared the Tunisian way.") + 
+          "</div>";
+
+      }
+      else if (venue.name == "Halal Food Special"){
+        // Halal Food Special Menu
+
+      }
+      else if (venue.name == "Casablanca"){
+        // Casablanca Menu
+
+      }
+      else if (venue.name == "The Real Le Anh"){
+        // The Real Le Anh Menu
+
+      }
+      else if (venue.name == "Le Anh"){
+        // Le Anh Menu
+        
+      }
+      else if (venue.name == "Magic Carpet Foods"){
+        // Magic Carpet Foods Menu
+        
+      }
+      else{
+        menudisplay += generateMenuItemDescription("Sorry, no menu available at this time. Please check back later!");
+      }
+
+      $('#menu').append(menudisplay);
+  }
+
   function displayBusiness(venue) {
     var distanceMiles = Math.round(0.000621371 * venue.location.distance * 100) / 100;
     var business =
       "<div class='bizheader'>" +
-        "<div style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
-        "<h3 style='text-shadow:-1px 1px 0px #9e9;' style='margin-bottom:0px; line-height:24px'>" + venue.name + "</h3>";      
-    getCategory(venue.id, function(category) {
-    	if (category == -1) { //No category found
-    		business +=
+        "<div id='not-right-category' data-venueId='" + venue.id + "'style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
+        "<h3 style='text-shadow:-1px 1px 0px #9e9;' style='margin-bottom:0px; line-height:24px'>" + venue.name + "</h3></div>"; 
+
+        business +=
+      "<div class='bizsection bizline' style='background-color:#eee;'>" +
+        "<a href='http://maps.google.com/maps?ll=" + venue.location.lat + "," + venue.location.lng + "' type='button' style='margin:0px; display: inline' class='btn btn-inverse'><i class='icon-map-marker' style='margin-right:6px'></i>Get Me There!</a>" +
+        "<a href=tel:+1" + venue.contact.phone + " type='button' style='margin-left:7px; display: inline' class='btn btn-inverse'><i class='icon-phone' style='margin-right:6px'></i><strong>Call  </strong>" + venue.contact.formattedPhone + "</a>" +
+      "</div>";
+          	
+    	business +=
+      "<div class='bizsection bizline'>" +
+        "<address><i class='icon-home'></i> <strong>Address: </strong>" + venue.location.address + " " + venue.location.crossStreet + "</address>";
+
+      getCategory(venue.id, function(category) {
+      if (category == -1) { //No category found
+        business +=
           "<span><a class='kind-of-place' onClick='notRightCategory()'>What kind of place is this?</a></span>" +
           "<select class='category-dropdown' name='category' style='display:none'>" +
             "<option value='Mexican'>MEXICAN!</option>" +
             "<option value='Sandwiches'>Sandwiches</option>" +
           "</select>" +
         "</div>";
-    	} else {
-    		business += 
-          "<span class='kind-of-place'>" + category + " <a onClick='notRightCategory()' style='font-size:11px;color:#aaa;cursor:pointer;'><em>Not the right category?</em></a></span>" +
+      } else {
+        business += 
+          "<span class='kind-of-place'><i class='icon-tag'></i> <strong>Category: </strong>" + category + " <a onClick='notRightCategory()' style='font-size:11px;color:#aaa;cursor:pointer;'><em>Not the right category?</em></a></span>" +
           "<select class='category-dropdown' name='category' style='display:none'>" +
             "<option value='Mexican'>MEXICAN!</option>" +
             "<option value='Sandwiches'>Sandwiches</option>" +
@@ -149,6 +510,8 @@
       
     
     	getWaitTime(venue.id, function(waitTime) {
+    	console.log(venue.id);
+    	console.log(waitTime);
     		if (waitTime == -1) {
     			business +=
     			"<div class='bizsection bizline'>" 
@@ -158,15 +521,15 @@
     		else {
     			business +=
     			"<div class='bizsection bizline'>" 
-    			+ "<p> Estimated line length: " + waitTime +"</p>" +
+    			+ "<span> Estimated line length: " + waitTime +"</span>" +
     			"</div>";
     		}
     		
     		business +=
     		"<div class='bizsection bizline'>" +
     		"<div data-role='fieldcontain'>" +
-        "<span class='slider' style='float:right' for='slider'>Waiting on line?  How long is it?</span>" +
-        "<input class='slider' style='float:right' id='slider' type='range' name='slider' value='0' min='0' max='20' onchange='howManyPeople()'/>" +
+        "<span class='slider' for='slider'>Waiting on line?  How long is it?</span><br/>" +
+          "<form><input class='slider' id='slider' type='range' name='slider' value='0' min='0' max='20' onchange='howManyPeople()'/></form>" +
         "<span id='wait-time' onclick='lineLengthSubmit()' style='font-size:24px; margin-top:5px'>0</span>" +
 
     		//"<input id='rangeValue' type='text' size='2'>" +
@@ -189,7 +552,7 @@ var globalFoursquareId;
         foursquareId = document.URL.substring(urlSearch);
         console.log(foursquareId);
         prepareToGetFood(foursquareId);
-        globalFoursquareId = foursquareId;
+        window.globalFoursquareId = foursquareId;
       }
 
   });
@@ -275,7 +638,7 @@ function setMarker(map, lat, lng, name) {
   function lineLengthSubmit() {
     $('.slider').css('display', 'none');
     $('#wait-time').animate({"left": "-=500px"}, "slow");
-    addWaitTime(globalFoursquareId, $('#slider').val());
+    addWaitTime($('#not-right-category').data('venueid'), $('#slider').val());
 
   }
 
@@ -287,7 +650,7 @@ function setMarker(map, lat, lng, name) {
     $('.category-dropdown').focusout(function() {
       var category = $('.category-dropdown').val();
       $('.kind-of-place').html(category);
-      addCategory(globalFoursquareId, category);
+      addCategory($('#not-right-category').data('venueid'), category);
     });
   }
 
@@ -307,6 +670,7 @@ function setMarker(map, lat, lng, name) {
     else {
       var dayType = 'TH';
     }
+    var hours = currentTime.getHours();
     var minutes = currentTime.getMinutes();
     if (minutes < 15) {
       var interval = 'q1';
@@ -317,13 +681,17 @@ function setMarker(map, lat, lng, name) {
     } else {
       var interval = 'q4';
     }
+    console.log('id in addWaitTime:' + id);
+    console.log('numPeople:' + numPeople);
     
     var dayObject = {};
-    var timeObject = {};
+    var minutesObject = {};
     var intervalObject = {};
-    timeObject[uniqueTime] = numPeople;
-    intervalObject[interval] = timeObject;
-    dayObject[dayType] = intervalObject;
+    var hoursObject = {};
+    minutesObject[uniqueTime] = numPeople;
+    intervalObject[interval] = minutesObject;
+    hoursObject[hours] = intervalObject;
+    dayObject[dayType] = hoursObject;
     
     ws.update(id, dayObject);
 
@@ -340,7 +708,6 @@ function addCategory(id, category) {
       
     //if (dataObject.categories){
       var categoryObject = dataObject.categories ? dataObject.categories : {};
-      console.log(categoryObject);
       var count = categoryObject[category] ? categoryObject[category] : 0;
       count++;
       categoryObject[category] = count;
@@ -402,6 +769,7 @@ function getWaitTime(id, callback){
       else {
         var dayType = 'TH';
       }
+      var hours = currentTime.getHours();
       var minutes = currentTime.getMinutes();
       if (minutes < 15) {
         var interval = 'q1';
@@ -422,22 +790,28 @@ function getWaitTime(id, callback){
       	if (!day)
       		callback(-1);
       	else {
-      		var lineCounts = day[interval];
-      		if (!lineCounts)
+      		var hour = day[hours];
+      		if (!hour)
       			callback(-1);
-      		else{
-      			var total = 0;
-      			var count = 0;
-      			for (x in lineCounts) {
-        			total += lineCounts[x];
-        			count ++;
+      		else {
+      			var lineCounts = hour[interval];
+      			if (!lineCounts)
+      				callback(-1);
+      			else{
+      				var total = 0;
+      				var count = 0;
+      				for (x in lineCounts) {
+        				total += lineCounts[x];
+        				count ++;
+      				}
+      				callback(total/count);
       			}
-      			callback(total/count);
-      		}
+      	  }
       	}
       }
       
     }).on('error', function(data, response) {
+    	console.log('error');
     	callback(-1);
     });
 }
@@ -461,7 +835,11 @@ window.addEventListener("resize", function() {
     $('#menu').css('width', '100%').css('display','inline');
   }
 
-
+  function hideMenu() {
+    $('#menu').css('display', 'none');
+    $('#menu-layout').css('display','none');
+    $('#business').css('display','inline');
+  }
 
 </script>
 
