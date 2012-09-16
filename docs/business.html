@@ -38,10 +38,6 @@
     ================================================== -->
   <div id="business" style='width:100%;margin-top:-10px;'>
   </div>
-  <div id="menu-layout" style="display:none;">
-      <div id="menu">
-      </div>
-  </div> 
 
 <style type='text/css'>
   .bizheader{
@@ -59,9 +55,6 @@
   }
   .bizline{
     border-bottom:1px solid #DDD;
-  }
-  .bizsection a:hover{
-      text-decoration:none;
   }
 </style>
 
@@ -102,46 +95,45 @@
     });
   }
 
-  function displayMenu(venue){
-      var distanceMiles = Math.round(0.000621371 * venue.location.distance * 100) / 100;
-      var menudisplay = 
-        "<div class='bizheader'>" +
-          "<div style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
-          "<h3 style='text-shadow:-1px 1px 0px #9e9;'>" + venue.name + " Menu</h3>" +
-        "</div>";
-      $('#menu').append(menudisplay);
-  }
 
   function displayBusiness(venue) {
     var distanceMiles = Math.round(0.000621371 * venue.location.distance * 100) / 100;
     var business =
       "<div class='bizheader'>" +
         "<div style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
-        "<h3 style='text-shadow:-1px 1px 0px #9e9;'>" + venue.name + "</h3>" +
-      "</div>";
-      
+        "<h3 style='text-shadow:-1px 1px 0px #9e9;' style='margin-bottom:0px; line-height:24px'>" + venue.name + "</h3>";      
     getCategory(venue.id, function(category) {
-      if (category == -1) { //No category found
-        business +=
-        "<div class='bizsection bizline'>" +
+    	if (category == -1) { //No category found
+    		business +=
           "<span><a class='kind-of-place' onClick='notRightCategory()'>What kind of place is this?</a></span>" +
           "<select class='category-dropdown' name='category' style='display:none'>" +
             "<option value='Mexican'>MEXICAN!</option>" +
-            "<option value='Sandwiches'>Sancwiches</option>" +
+            "<option value='Sandwiches'>Sandwiches</option>" +
           "</select>" +
         "</div>";
-      } else {
-        business += 
-        "<div class='bizsection bizline'>" +
+    	} else {
+    		business += 
           "<span class='kind-of-place'>" + category + " <a onClick='notRightCategory()'>Not the right category?</a></span>" +
           "<select class='category-dropdown' name='category' style='display:none'>" +
             "<option value='Mexican'>MEXICAN!</option>" +
             "<option value='Sandwiches'>Sandwiches</option>" +
           "</select>" +
         "</div>";
-      }
-      
+    	}
       business +=
+      "<div style='text-align:center; margin: 10px;'>" +
+        "<a href='http://maps.google.com/maps?ll=" + venue.location.lat + "," + venue.location.lng + "' type='button' style='margin:5px; display: inline' class='btn btn-inverse'><i class='icon-map-marker' style='margin-right:6px'></i>Get Me There!</a>" +
+        "<a href=tel:+1" + venue.contact.phone + "' type='button' style='margin:5px; display: inline' class='btn btn-inverse'><i class='icon-phone' style='margin-right:6px'></i><strong>Call  </strong>" + venue.contact.formattedPhone + "</a>" +
+      "</div>";
+
+      business +=
+      "<p>" + 
+        "<label for='amount'>Donation amount ($50 increments):</label>" +
+        "<input type='text' id='amount' style='border:0; color:#f6931f; font-weight:bold;' />" +
+      "</p>" +
+      "<div id='slider'></div>";
+          	
+    	business +=
       "<div class='bizsection bizline'>" +
         "<address>" + venue.location.address + " " + venue.location.crossStreet + "</address>" +
       "</div>";
@@ -151,7 +143,7 @@
     		if (waitTime == -1) {
     			business +=
     			"<div class='bizsection bizline'>" 
-    			+ "<span> Estimated Line Length: Currently unavailable.  Feed us some data! </span>" +
+    			+ "<p> Estimated Line Length: Currently unavailable.  Feed us some data! </p>" +
     			"</div>";
     		}
     		else {
@@ -164,6 +156,7 @@
     		 $('#business').append(business);
     	
     	//});
+    
     });
   }
     
@@ -176,7 +169,19 @@ var globalFoursquareId;
         prepareToGetFood(foursquareId);
         globalFoursquareId = foursquareId;
       }
+
+    $( "#slider" ).slider({
+        value:100,
+        min: 0,
+        max: 500,
+        step: 50,
+        slide: function( event, ui ) {
+          $( "#amount" ).val( "$" + ui.value );
+        }
+      });
+      $( "#amount" ).val( "$" + $( "#slider" ).slider( "value" ) );
   });
+
 
   function notRightCategory () {
     $('.category-dropdown').css('display', 'inline');
@@ -326,28 +331,7 @@ function getWaitTime(id, callback){
     });
 }
 
-window.addEventListener("resize", function() {
-    if ($(window).height() < $(window).width()) {
-      hideBusinessInfo();
-    }
-    else {
-      hideMenu();
-    }
-    
-  }, false);
 
-  function hideBusinessInfo() {
-    $('#business').css('display', 'none');
-    $('#menu-layout').css('display','inline');
-    var width = $(window).width();
-    //var height = $(window).height();
-    $('#menu').css('width', '100%');
-  }
-
-  function hideMenu() {
-    $('#menu-layout').css('display','none');
-    $('#business').css('display', 'inline');
-  }
 
 </script>
 

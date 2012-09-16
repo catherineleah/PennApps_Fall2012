@@ -40,6 +40,7 @@
         text-transform:none;
         color:#333;
       }
+
     </style>
 
   </head>
@@ -125,7 +126,7 @@
 
 
   function findFoodNearMe(lat, lng) {
-    $("html, body").animate({ scrollTop: $('#scroll').offset().top }, 300);
+    $("html, body").animate({ scrollTop: $('#scroll').offset().top }, 800);
     ll = lat + "," + lng;
     $.ajax({
       async: false,
@@ -208,6 +209,8 @@ function displayMap(lat, lng) {
   var zoom;
 
   zoom = 16;
+
+
 
   var myOptions = {
     zoom: zoom,
