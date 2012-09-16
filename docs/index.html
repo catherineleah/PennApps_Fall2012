@@ -63,15 +63,16 @@
 
       </div>
     </div>
-
-    <ul id="scroll" style="margin-top: 50px">
-    </ul>
+    <div id="height-fixer">
+      <ul id="scroll" style="margin-top: 50px; position: relative; top: 0px;">
+      </ul>
+    </div>
     <div id="map-container" style="display:none;">
       <div id="map-canvas" style="position:absolute; top: 0px; left: 0px; z-index:900">
       </div>
       <button onclick="redoSearch()" type="button" class="btn btn-inverse" style="position: absolute; top: 10px; right: 10px; z-index:1000">Redo Search Here</button>
     </div>
-    <div id="filters" class="btn-group" style="position: fixed; bottom:0px; display:none">
+    <div id="filters" class="btn-group" style="position: fixed; bottom:0px; display:none; z-index: 1000">
       <button onclick="sortByDistance()" class="btn btn-inverse btn-bottom"><i class='icon-map-marker' style="margin-right:8px"></i>Distance</button>
       <button onclick="sortByWaitTime()" class="btn btn-inverse btn-bottom"><i class='icon-group' style="margin-right:8px"></i>Wait Time</button>
       <button class="btn btn-bottom btn-inverse">3</button>
@@ -81,7 +82,9 @@
 <script type="text/javascript">
 
 
-  $('.btn-bottom').css('width', $(window).width() / 3 + 'px').css('height', '50px');
+  $('.btn-bottom').css('width', ($(window).width() + 5) / 3 + 'px').css('height', '50px');
+  $('#height-fixer').css('max-height', $(window).height() * 0.5 + 'px' );
+  $('#scroll').css('max-height', $(window).height() * 0.5 + 'px' );
 
 
   function sortByWaitTime() {
@@ -94,6 +97,7 @@
   }; 
 
   function sortByDistance() {
+
     $('ul li').sort(sortDistance).appendTo('ul'); 
     $("html, body").animate({ scrollTop: $('#scroll').offset().top }, 10);
   }
