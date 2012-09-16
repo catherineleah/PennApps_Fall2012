@@ -63,6 +63,90 @@
   .bizsection a:hover{
       text-decoration:none;
   }
+  .menuSectionHeader{
+    width:100%;
+    margin:22px 0px 10px 0px;
+    border-bottom:1px solid #CCC;
+    padding:0px;
+    color:#111;
+  }
+  .menuSectionTitle{
+    font-weight:bold;
+    color:#999;
+    font-size:12px;
+    margin:0px 20px 0px 20px;
+    text-transform:uppercase;
+  }
+  .menuItem{
+    width:100%;
+    display:inline-block;
+    border:0px solid red;
+    height:18px;
+    font-size:12px;
+  }
+  .menuItemLarger{
+    width:100%;
+    display:inline-block;
+    border:0px solid red;
+    height:25px;
+    font-size:12px;
+  }
+  .menuItemLargerDesc{
+    width:100%;
+    display:inline-block;
+    border:0px solid red;
+  }
+  .menuItemName{
+    margin-left:20px;
+    width:40%;
+    min-width:200px;
+    float:left;
+    border:0px solid blue;
+    font-weight:bold;
+  }
+  .menuItemNameSub{
+    margin-left:20px;
+    width:40%;
+    min-width:200px;
+    float:left;
+    border:0px solid blue;
+    font-style:italic;
+  }
+  .menuItemPrice1{
+    margin-left:10px;
+    float:left;
+    width:10%;
+    min-width:80px;
+    border:0px solid yellow;
+  }
+  .menuItemPrice2{
+    margin-left:10px;
+    float:left;
+    width:10%;
+    min-width:80px;
+    border:0px solid magenta;
+  }
+  .menuItemCalories{
+    margin-left:10px;
+    margin-right:20px;
+    float:right;
+    width:20%;
+    min-width:100px;
+    border:0px solid aqua;
+  }
+  .menuItemNote{
+    margin-left:20px;
+    font-style:italic;
+    color:#88DD77;
+  }
+  .menuItemDescription{
+    margin-left:20px;
+    margin-right:20px;
+    margin-bottom:10px;
+    color:#999;
+    margin-top:-5px;
+    font-size:12px;
+  }
 </style>
 
 <script type="text/javascript">
@@ -103,6 +187,38 @@
     });
   }
 
+  function generateMenuSection(title){
+    return "<div class='menuSectionHeader'><div class='menuSectionTitle'>" + title + "</div></div>";
+  }
+
+  function generateMenuNote(note){
+    return "<div class='menuItemLarger'>" +
+              "<div class='menuItemNote'>" + note + "</div>" + "</div>";
+  }
+
+  function generateMenuItemDescription(desc){
+    return "<div class='menuItemLargerDesc'>" +
+              "<div class='menuItemDescription'>" + desc + "</div>" + "</div>";
+  }
+
+  function generateMenuItem(name, price1, price2, cals){
+    var temp = "<div class='menuItem'>" +
+              "<div class='menuItemName'>" + name + "</div>" +
+              "<div class='menuItemPrice1'>" + price1 + "</div>" +
+              "<div class='menuItemPrice2'>" + price2 + "</div>" +
+              "<div class='menuItemCalories'>" + cals+ "</div>" + "</div>";
+    return temp;
+  }
+
+  function generateMenuItemSub(sub, price1, cals){
+    var temp = "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;" + sub + "</div>" +
+              "<div class='menuItemPrice1'>" + price1 + "</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>" + cals + "/div>" + "</div>";
+    return temp;
+  }
+
   function displayMenu(venue){
       var distanceMiles = Math.round(0.000621371 * venue.location.distance * 100) / 100;
       var menudisplay = 
@@ -110,6 +226,317 @@
           "<div style='float:right;margin-top:22px;width:auto;'><i class='icon-map-marker'></i> " + distanceMiles + " mi.</div>" + 
           "<h3 style='text-shadow:-1px 1px 0px #9e9;'>" + venue.name + " Menu</h3>" +
         "</div>";
+
+      if (venue.name == "Hemo's"){
+        menudisplay += 
+          "<div style='margin:0px;padding:0px;margin-bottom:25px;'><div class='menuSectionHeader'><div class='menuSectionTitle'>Breakfast</div></div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Eggs on a roll</div>" +
+              "<div class='menuItemPrice1'>1.50 small</div>" +
+              "<div class='menuItemPrice2'>2.25 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Eggs and cheese</div>" +
+              "<div class='menuItemPrice1'>1.75 small</div>" +
+              "<div class='menuItemPrice2'>2.50 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Bacon, Egg & Cheese</div>" +
+              "<div class='menuItemPrice1'>2.25 small</div>" +
+              "<div class='menuItemPrice2'>3.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Ham, Egg & Cheese</div>" +
+              "<div class='menuItemPrice1'>2.25 small</div>" +
+              "<div class='menuItemPrice2'>3.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Sausage, Egg & Cheese</div>" +
+              "<div class='menuItemPrice1'>2.25 small</div>" +
+              "<div class='menuItemPrice2'>3.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>BLT</div>" +
+              "<div class='menuItemPrice1'>2.50 small</div>" +
+              "<div class='menuItemPrice2'>3.50 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>BLT with cheese</div>" +
+              "<div class='menuItemPrice1'>2.75 small</div>" +
+              "<div class='menuItemPrice2'>3.75 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Steak, Eggs & Cheese</div>" +
+              "<div class='menuItemPrice1'>3.25 small</div>" +
+              "<div class='menuItemPrice2'>4.25 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+
+          "<div class='menuSectionHeader'><div class='menuSectionTitle'>Lunch</div></div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Meatballs</div>" +
+              "<div class='menuItemPrice1'>3.00 small</div>" +
+              "<div class='menuItemPrice2'>4.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Spinach Sub</div>" +
+              "<div class='menuItemPrice1'>3.00 small</div>" +
+              "<div class='menuItemPrice2'>4.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with Eggs</div>" +
+              "<div class='menuItemPrice1'>add 1.00</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Beef Hot Dog</div>" +
+              "<div class='menuItemPrice1'>1.50</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Beef Hot Sausage</div>" +
+              "<div class='menuItemPrice1'>2.25</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+
+          "<div class='menuSectionHeader'><div class='menuSectionTitle'>Cheese Steaks</div></div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Beef Cheese Steak</div>" +
+              "<div class='menuItemPrice1'>3.00 small</div>" +
+              "<div class='menuItemPrice2'>4.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Chicken Cheese Steak</div>" +
+              "<div class='menuItemPrice1'>3.00 small</div>" +
+              "<div class='menuItemPrice2'>4.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with extra meat</div>" +
+              "<div class='menuItemPrice1'>add 2.00</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with mushrooms</div>" +
+              "<div class='menuItemPrice1'>add 0.50</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with BBQ or HEMO Sauce</div>" +
+              "<div class='menuItemPrice1'>add 0.25</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with Lettuce/Tomato</div>" +
+              "<div class='menuItemPrice1'>add 0.50</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+
+          "<div class='menuSectionHeader'><div class='menuSectionTitle'>Grilled Chicken</div></div>" +
+            "<div class='menuItemLarger'>" +
+              "<div class='menuItemNote'>Served with choice of Hemo Sauce, Hemo II Sauce, BBQ Sauce or Teriyaki Sauce</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Grilled Chicken</div>" +
+              "<div class='menuItemPrice1'>3.25 small</div>" +
+              "<div class='menuItemPrice2'>4.25 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with tomato/lettuce/spinach</div>" +
+              "<div class='menuItemPrice1'>add 0.25</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with cheese</div>" +
+              "<div class='menuItemPrice1'>add 0.25</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with eggs</div>" +
+              "<div class='menuItemPrice1'>add 1.00</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with mushrooms</div>" +
+              "<div class='menuItemPrice1'>add 0.50</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with extra chicken</div>" +
+              "<div class='menuItemPrice1'>add 1.50</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with mushrooms/onions/green peppers</div>" +
+              "<div class='menuItemPrice1'>add 0.75</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+
+          "<div class='menuSectionHeader'><div class='menuSectionTitle'>Pitas</div></div>" + 
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Grilled Chicken with lettuce & tomato</div>" +
+              "<div class='menuItemPrice1'>3.50</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemNameSub'>&nbsp;&nbsp;&nbsp;with cheese</div>" +
+              "<div class='menuItemPrice1'>add 0.25</div>" +
+              "<div class='menuItemPrice2'>&nbsp;</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" + "</div>";
+
+      }
+      else if (venue.name == "House of Pita"){ 
+        // House of Pita Menu
+
+      }
+      else if (venue.name == "Steak Queen"){
+        // Steak Queen Menu
+
+      }
+      else if (venue.name == "Bui's"){
+        // Bui's Menu
+
+      }
+      else if (venue.name == "Troy"){
+        // Troy Menu
+
+      }
+      else if (venue.name == "Lovash"){
+        // Lovash Menu
+
+      }
+      else if (venue.name == "Chez Yasmine"){
+        // Chez Yasmine Menu
+        menudisplay += 
+          "<div style='margin:0px;padding:0px;margin-bottom:25px;'>" + 
+          generateMenuSection("Food") + generateMenuNote("Free water and fruit with every order") +
+          generateMenuItem("The Wistar", "6.00", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Brie, sautéed mushrooms, avocado, basil pesto, herbes de Provence served on 11\" roll or baguette.") + 
+          generateMenuItem("The Wharton", "6.00", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Dolphin-safe albacore tuna, tomato, lettuce, Emmental cheese, carrot, hard-boiled eggs, mayo & herbes de Provence on a 11\" roll or baguette.") + 
+          generateMenuItem("Vegetarian Banh Mi", "6.00", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Tofu, ginger, pickled carrots, cucumber, cilantro, jalapeño pepper, mayonnaise and soy sauce served on 11\" roll.") + 
+          generateMenuItem("Chicken Banh Mi", "6.00", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Free-range chicken breast, ginger, pickled carrots, cucumber, cilantro, jalapeño pepper, mayonnaise and soy sauce served on 11\" roll.") + 
+          generateMenuItem("Ménage a Trois Grilled Cheese & Soup", "6.00", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Cheddar, Monterey Jack, and Emmental served on rustic bread with jalapeño pepper. Grilled to perfection with cornichons on the side.") + 
+          generateMenuItem("La Soupe du Jour", "3.00", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Choice of vegetarian or non-vegetarian soup, served with bread or fiber-rich Swedish crackers.") + 
+          generateMenuItem("The Nikki: Swedish Salmon Smörgås", "6.25", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Smoked salmon, cucumber, radishes, hard-boiled egg, dill, lemon, and capers. A sprinkle of caviar. Best served on baguette, rye or pumpernickel bread.") + 
+          generateMenuItem("Le Josie", "6.25", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Open-face Swedish Salmon Smörgås.") + 
+          generateMenuItem("Tunisian Sandwich", "6.00", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Dolphin-safe tuna, hard-boiled egg, tomato, green pepper, chives, olives, cucumber, mint, parsley, and a dressing of lemon juice & extra virgin olive oil with spicy harissa served on 11\" inch roll or baguette.") + 
+          generateMenuItem("PB & J", "2.75", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Smooth or creamy PB, grape/strawberry/apricot jam, Nutella (add $0.50), bakery white or whole wheat bread.") + 
+          generateMenuItem("The Gretchen: Quinoa Salad", "6.25", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Organic quinoa, French feta cheese, organic kale, cucumber, carrot, spring mix, red cabbage, cilantro, mixed nuts. A dressing of lemon juice & extra virgin olive oil, served with 4\" roll or baguette.") + 
+          generateMenuItem("Swedish Berry Salad", "4.00", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Strawberries, raspberries, blackberries, blueberries, grapes, kiwis. Sprinkled with fresh chopped mint and a touch of rose water. <em>(When available)</em>") + 
+          generateMenuItem("Vegetarian Couscous", "6.25", "&nbsp;", "estimated calories") + 
+          generateMenuItemDescription("Potatoes, carrots, turnips, zucchini, chard, cabbage, bell peppers, garbanzo beans. Prepared the Tunisian way.") + 
+          "</div>";
+
+      }
+      else if (venue.name == "Halal Food Special"){
+        // Halal Food Special Menu
+
+      }
+      else if (venue.name == "Casablanca"){
+        // Casablanca Menu
+
+      }
+      else if (venue.name == "The Real Le Anh"){
+        // The Real Le Anh Menu
+
+      }
+      else if (venue.name == "Le Anh"){
+        // Le Anh Menu
+        menudisplay += 
+          "<div style='margin:0px;padding:0px;margin-bottom:25px;'>" + 
+          "<div class='menuSectionHeader'><div class='menuSectionTitle'>Soup</div></div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Wonton Soup</div>" +
+              "<div class='menuItemPrice1'>1.50 small</div>" +
+              "<div class='menuItemPrice2'>3.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Hot & Sour Soup (with sliced pork)</div>" +
+              "<div class='menuItemPrice1'>1.50 small</div>" +
+              "<div class='menuItemPrice2'>3.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Bean Curd Soup (no meat)</div>" +
+              "<div class='menuItemPrice1'>1.50 small</div>" +
+              "<div class='menuItemPrice2'>3.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Bean Curd Soup (with chicken or pork)</div>" +
+              "<div class='menuItemPrice1'>1.75 small</div>" +
+              "<div class='menuItemPrice2'>3.50 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Bean Curd Soup (with shrimp or beef)</div>" +
+              "<div class='menuItemPrice1'>2.00 small</div>" +
+              "<div class='menuItemPrice2'>4.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Soup (no meat)</div>" +
+              "<div class='menuItemPrice1'>1.50 small</div>" +
+              "<div class='menuItemPrice2'>3.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Soup (with shrimp or beef)</div>" +
+              "<div class='menuItemPrice1'>2.00 small</div>" +
+              "<div class='menuItemPrice2'>4.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Soup (no meat)</div>" +
+              "<div class='menuItemPrice1'>1.50 small</div>" +
+              "<div class='menuItemPrice2'>3.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Noodle Soup (no meat)</div>" +
+              "<div class='menuItemPrice1'>1.50 small</div>" +
+              "<div class='menuItemPrice2'>3.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Noodle Soup (with chicken or pork)</div>" +
+              "<div class='menuItemPrice1'>1.75 small</div>" +
+              "<div class='menuItemPrice2'>3.50 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Noodle Soup (with shrimp or beef)</div>" +
+              "<div class='menuItemPrice1'>2.00 small</div>" +
+              "<div class='menuItemPrice2'>4.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Noodle Soup (with chicken or pork)</div>" +
+              "<div class='menuItemPrice1'>1.75 small</div>" +
+              "<div class='menuItemPrice2'>3.50 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Noodle Soup (with shrimp or beef)</div>" +
+              "<div class='menuItemPrice1'>2.00 small</div>" +
+              "<div class='menuItemPrice2'>4.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Bean Curd Soup (with chicken or pork)</div>" +
+              "<div class='menuItemPrice1'>1.75 small</div>" +
+              "<div class='menuItemPrice2'>3.50 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>" +
+            "<div class='menuItem'>" +
+              "<div class='menuItemName'>Vegetable Bean Curd Soup (with shrimp or beef)</div>" +
+              "<div class='menuItemPrice1'>2.00 small</div>" +
+              "<div class='menuItemPrice2'>4.00 large</div>" +
+              "<div class='menuItemCalories'>estimated calories</div>" + "</div>";
+      }
+      else if (venue.name == "Magic Carpet Foods"){
+        // Magic Carpet Foods Menu
+        
+      }
+      else{
+        menudisplay += "Sorry, no menu available at this time. Please check back later!"
+      }
+
       $('#menu').append(menudisplay);
   }
 

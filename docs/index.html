@@ -136,7 +136,7 @@
         categoryId: "4bf58dd8d48988d1cb941735",
         client_id: "1RZ3PLTJPBAYOY4KEJDJIEUPM3CCJFRB22P3JYQZA3JCPE0Z",
         client_secret: "FDCYFIMGAQGVHNVIZ5XSHLMQCYLSCKELUPEBSB3K5TYUTNRW",
-        radius: "200",
+        radius: "500",
         limit: "50",
         v: "20120822"
       },
@@ -166,9 +166,19 @@
           "<div style='margin-left:20px;'>" + 
             "<div style='font-weight:bold;color:#333;text-decoration:none;'>" + venues.name + "</div>" +
           "</div>" +
-          "<div style='color:#666;margin-left:20px;text-decoration:none;'>" + venues.location.address + " " + venues.location.crossStreet + "</div>" + 
+          "<div style='color:#666;margin-left:20px;text-decoration:none;'>";
+    if (venues.location.address){
+      business += venues.location.address;
+    }
+
+    if (venues.location.crossStreet){
+      business += " " + venues.location.crossStreet;
+    }
+
+    business += "</div>" + 
         "</div>" +
       "</a>";
+      
     $('#scroll').append(business);
 
   }
