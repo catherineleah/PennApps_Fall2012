@@ -38,6 +38,10 @@
     ================================================== -->
   <div id="business" style='width:100%;margin-top:-10px;'>
   </div>
+  <div id="menu-layout" style="display:none;">
+      <div id="menu">
+      </div>
+  </div> 
 
 <style type='text/css'>
   .bizheader{
@@ -336,7 +340,7 @@ window.addEventListener("resize", function() {
     $('#business').css('display', 'none');
     $('#menu-layout').css('display','inline');
     var width = $(window).width();
-    var height = $(window).height();
+    //var height = $(window).height();
     $('#menu').css('width', '100%');
   }
 
